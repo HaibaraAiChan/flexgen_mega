@@ -10,6 +10,7 @@ import threading
 from typing import Optional, Union, Tuple
 
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 
 import numpy as np
@@ -499,9 +500,11 @@ class TorchDevice:
 
     def mha_gen_TP(self, inputs, attention_mask, w_q, b_q, w_k, b_k, w_v, b_v,
                 w_out, b_out, w_ln, b_ln, n_head, k_cache, v_cache, donate,
-                attn_sparsity, compress_cache, comp_config):
+                attn_sparsity, compress_cache, comp_config, tensor_parallel_size):
         """Multi-head attention (decoding phase)."""
         print('mha_gen decode----------------')
+        
+        
         # decompress weights
         if w_q.device.device_type == DeviceType.COMPRESSED:
             w_q = w_q.device.decompress(w_q)
@@ -514,6 +517,41 @@ class TorchDevice:
         head_dim = h // n_head
         scaling = head_dim ** -0.5
         
+        heads_per_split = n_head // tensor_parallel_size
+        q_weight_partitions = nn.ParameterList([
+            nn.Parameter(w_q.view(h, h // tensor_parallel_size))
+            for _ in range(tensor_parallel_size)
+        ])
+        k_weight_partitions = nn.ParameterList([
+            nn.Parameter(w_k.view(h, h // tensor_parallel_size))
+            for _ in range(tensor_parallel_size)
+        ])
+        v_weight_partitions = nn.ParameterList([
+            nn.Parameter(w_v.view(h, h // tensor_parallel_size))
+            for _ in range(tensor_parallel_size)
+        ])
+        out_weight_partitions = nn.ParameterList([
+            nn.Parameter(w_out.view(h, h // tensor_parallel_size))
+            for _ in range(tensor_parallel_size)
+        ])
+        q_bias_partitions = nn.ParameterList([
+            nn.Parameter(b_q.view(h // tensor_parallel_size))
+            for _ in range(tensor_parallel_size)
+        ])
+        k_bias_partitions = nn.ParameterList([
+            nn.Parameter(b_k.view(h // tensor_parallel_size))
+            for _ in range(tensor_parallel_size)
+        ])
+        v_bias_partitions = nn.ParameterList([
+            nn.Parameter(b_v.view(h // tensor_parallel_size))
+            for _ in range(tensor_parallel_size)
+        ])
+        out_bias_partitions = nn.ParameterList([
+            nn.Parameter(b_out.view(h // tensor_parallel_size))
+            for _ in range(tensor_parallel_size)
+        ])
+        # batch_size, seq_len, _ = x.size()
+        # weight = weight_partitions[split_idx]
         #--------------------------- modified start
         # post_attention_layernorm = FusedLayerNorm( h, sequence_parallel=True)
         # hidden_1 = post_attention_layernorm(inputs.data,weight=w_ln.data, bias=b_ln.data )
@@ -522,11 +560,18 @@ class TorchDevice:
         # print('return ')
         # return
         hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
-
+        print('hidden size ', hidden.size())
         # shape: (b, 1, h)
         q = F.linear(hidden, w_q.data, bias=b_q.data) * scaling
         k = F.linear(hidden, w_k.data, bias=b_k.data)
         v = F.linear(hidden, w_v.data, bias=b_v.data)
+        
+        
+        
+        
+        
+        
+        
         # shape: (b, 1, n_head, head_dim)
         q = q.view(b, tgt_s, n_head, head_dim)
         k = k.view(b, tgt_s, n_head, head_dim)

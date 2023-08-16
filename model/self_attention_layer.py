@@ -15,7 +15,8 @@ DUMMY_WEIGHT = "_DUMMY_"  # Use dummy weights for benchmark purposes
 class SelfAttention:
     def __init__(self, config, env, policy, layer_id):
         self.name = 'SelfAttention' ####
-        self.prefill = None         ####
+        self.prefill = None   ####
+        self.decode = False   ####
         self.config = config
         self.env = env
         self.layer_id = layer_id
@@ -56,7 +57,9 @@ class SelfAttention:
             # b_ln
             ((h,), dtype, path + "_layer_norm.bias"),
         ]
+        
         weights = init_weight_list(weight_specs, self.policy, self.env)
+
         weight_home.store(weights)
 
     def load_weight(self, weight_home, weight_read_buf, k):
@@ -223,7 +226,7 @@ class SelfAttention:
             h, new_k_cache, new_v_cache = self.compute.mha_gen_TP(h, mask, w_q,
                 b_q, w_k, b_k, w_v, b_v, w_out, b_out, w_ln, b_ln, n_head,
                 k_cache, v_cache, donate, self.policy.attn_sparsity,
-                self.policy.compress_cache, self.policy.comp_cache_config)
+                self.policy.compress_cache, self.policy.comp_cache_config, self.policy.tensor_parallel_size)
            
             cache_write_buf.store((new_k_cache, new_v_cache))
 

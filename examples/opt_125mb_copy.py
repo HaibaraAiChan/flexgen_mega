@@ -197,6 +197,9 @@ def add_parser_arguments(parser):
         choices=["fewer_batch", "breakdown"])
     parser.add_argument("--gpu-batch-size", type=int, default=4)
     parser.add_argument("--num-gpu-batches", type=int, default=1)
+    
+    parser.add_argument("--tensor-parallel-size", type=int, default=2) ###########
+    
     parser.add_argument("--percent", nargs="+", type=int,
         default=[100, 0, 100, 0, 100, 0],
         help="Six numbers. They are "
