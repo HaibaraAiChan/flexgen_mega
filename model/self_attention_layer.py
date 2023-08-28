@@ -2,6 +2,8 @@
 #     TorchMixedDevice, DeviceType, general_copy, fix_recursive_import)
 # import dataclasses
 import os
+import torch
+import torch.nn as nn
 import numpy as np
 import sys
 import torch.nn.functional as F
@@ -52,10 +54,10 @@ class SelfAttention:
             ((h, h), dtype, path + ".out_proj.weight"),
             # b_out
             ((h,), dtype, path + ".out_proj.bias"),
-            # w_ln
-            ((h,), dtype, path + "_layer_norm.weight"),
-            # b_ln
-            ((h,), dtype, path + "_layer_norm.bias"),
+            # # w_ln
+            # ((h,), dtype, path + "_layer_norm.weight"),
+            # # b_ln
+            # ((h,), dtype, path + "_layer_norm.bias"),
         ]
         
         weights = init_weight_list(weight_specs, self.policy, self.env)
@@ -181,7 +183,7 @@ class SelfAttention:
         return (batch_size, seq_len, self.config.input_dim), self.config.dtype
 
     def forward(self, hidden, cache_read_buf, weight_read_buf, attention_mask,
-                cache_write_buf, i, k):
+                cache_write_buf, i, k, split_idx):
         n_head = self.config.n_head
         print('------------------************   number of head', n_head)
 
@@ -224,14 +226,194 @@ class SelfAttention:
             #     self.policy.compress_cache, self.policy.comp_cache_config)
             
             h, new_k_cache, new_v_cache = self.compute.mha_gen_TP(h, mask, w_q,
-                b_q, w_k, b_k, w_v, b_v, w_out, b_out, w_ln, b_ln, n_head,
+                b_q, w_k, b_k, w_v, b_v, w_out, b_out, n_head,
                 k_cache, v_cache, donate, self.policy.attn_sparsity,
-                self.policy.compress_cache, self.policy.comp_cache_config, self.policy.tensor_parallel_size)
-           
+                self.policy.compress_cache, self.policy.comp_cache_config, self.policy.tensor_parallel_size, split_idx)
+            
             cache_write_buf.store((new_k_cache, new_v_cache))
 
         hidden.val = h
 
 
+    def mha_gen_TP(self, inputs, attention_mask, w_q, b_q, w_k, b_k, w_v, b_v,
+                    w_out, b_out, n_head, k_cache, v_cache, donate,
+                    attn_sparsity, compress_cache, comp_config, tensor_parallel_size, split_idx):
+            """Multi-head attention (decoding phase)."""
+            print('mha_gen decode----------------')
+            
+            # decompress weights
+            if w_q.device.device_type == DeviceType.COMPRESSED:
+                w_q = w_q.device.decompress(w_q)
+                w_k = w_k.device.decompress(w_k)
+                w_v = w_v.device.decompress(w_v)
+                w_out = w_out.device.decompress(w_out)
+
+            b, tgt_s, h = inputs.shape
+            src_s = attention_mask.shape[1]
+            head_dim = h // n_head
+            
+            scaling = head_dim ** -0.5
+            
+            heads_per_split = n_head // tensor_parallel_size
+            q_weight_partitions = nn.ParameterList([
+                nn.Parameter(w_q.view(h, h // tensor_parallel_size))
+                for _ in range(tensor_parallel_size)
+            ])
+            k_weight_partitions = nn.ParameterList([
+                nn.Parameter(w_k.view(h, h // tensor_parallel_size))
+                for _ in range(tensor_parallel_size)
+            ])
+            v_weight_partitions = nn.ParameterList([
+                nn.Parameter(w_v.view(h, h // tensor_parallel_size))
+                for _ in range(tensor_parallel_size)
+            ])
+            out_weight_partitions = nn.ParameterList([
+                nn.Parameter(w_out.view(h, h // tensor_parallel_size))
+                for _ in range(tensor_parallel_size)
+            ])
+            q_bias_partitions = nn.ParameterList([
+                nn.Parameter(b_q.view(h // tensor_parallel_size))
+                for _ in range(tensor_parallel_size)
+            ])
+            k_bias_partitions = nn.ParameterList([
+                nn.Parameter(b_k.view(h // tensor_parallel_size))
+                for _ in range(tensor_parallel_size)
+            ])
+            v_bias_partitions = nn.ParameterList([
+                nn.Parameter(b_v.view(h // tensor_parallel_size))
+                for _ in range(tensor_parallel_size)
+            ])
+            out_bias_partitions = nn.ParameterList([
+                nn.Parameter(b_out.view(h // tensor_parallel_size))
+                for _ in range(tensor_parallel_size)
+            ])
+            # batch_size, seq_len, _ = x.size()
+            # weight = weight_partitions[split_idx]
+            #--------------------------- modified start
+            # post_attention_layernorm = FusedLayerNorm( h, sequence_parallel=True)
+            # hidden_1 = post_attention_layernorm(inputs.data,weight=w_ln.data, bias=b_ln.data )
+            # print(hidden_1)
+            
+            # print('return ')
+            # return
+            # hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
+            # print('hidden size ', hidden.size())
+            # shape: (b, 1, h)
+            print('inputs.data shape ', inputs.data.size())
+            # batch_size, seq_len, _ = x.size()
+            batch_size, seq_len, _ = inputs.data.size()
+            x = inputs.data
+            weight_q = self.weight_q_partitions[split_idx]
+            bias_q = self.bias_q_partitions[split_idx]
+            
+            q = torch.matmul(x, weight_q) + bias_q
+
+            weight_k = self.weight_k_partitions[split_idx]
+            bias_k = self.bias_k_partitions[split_idx]
+            
+            k = torch.matmul(x, weight_k) + bias_k
+
+            weight_v = self.weight_v_partitions[split_idx]
+            bias_v = self.bias_v_partitions[split_idx]
+        
+            v = torch.matmul(x, weight_v) + bias_v
+            
+            q = q.view(batch_size, seq_len, self.heads_per_split, self.head_dim).transpose(1, 2)
+            k = k.view(batch_size, seq_len, self.heads_per_split, self.head_dim).transpose(1, 2)
+            v = v.view(batch_size, seq_len, self.heads_per_split, self.head_dim).transpose(1, 2)
+
+            attention_scores = torch.matmul(q, k.transpose(-2, -1))
+            scaled_attention_scores = attention_scores / torch.sqrt(torch.tensor(self.head_dim, dtype=attention_scores.dtype))
+
+            attention_weights = nn.functional.softmax(scaled_attention_scores, dim=-1)
+
+            output = torch.matmul(attention_weights, v).transpose(1, 2).contiguous().view(batch_size, seq_len, self.head_dim)
+        
+            # # q = F.linear(hidden, w_q.data, bias=b_q.data) * scaling
+            # # k = F.linear(hidden, w_k.data, bias=b_k.data)
+            # # v = F.linear(hidden, w_v.data, bias=b_v.data)
+            
+            # # shape: (b, 1, n_head, head_dim)
+            # q = q.view(b, tgt_s, n_head, head_dim)
+            # k = k.view(b, tgt_s, n_head, head_dim)
+            # v = v.view(b, tgt_s, n_head, head_dim)
+
+            # # shape: (b * n_head, 1, head_dim)
+            # q = q.permute(0, 2, 1, 3).reshape(b * n_head, tgt_s, head_dim)
+            # # shape: (1, b * n_head, head_dim)
+            # k_new = k.permute(1, 0, 2, 3).reshape(tgt_s, b * n_head, head_dim)
+            # # shape: (1, b * n_head, head_dim)
+            # v_new = v.permute(1, 0, 2, 3).reshape(tgt_s, b * n_head, head_dim)
+
+            if isinstance(k_cache, TorchTensor):
+                if attn_sparsity >= 1.0:  # Dense attention
+                    if compress_cache:
+                        # shape: (s, b * n_head, head_dim)
+                        k = k_cache.device.decompress(k_cache)[:src_s]
+                        v = v_cache.device.decompress(v_cache)[:src_s]
+                    else:
+                        # shape: (s, b * n_head, head_dim)
+                        k = k_cache.data[:src_s]
+                        v = v_cache.data[:src_s]
+                    k[src_s - 1:src_s] = k_new
+                    v[src_s - 1:src_s] = v_new
+
+                    # shape: (b * n_head, head_dim, s)
+                    k = k.permute(1, 2, 0).reshape(b * n_head, head_dim, src_s)
+                    # shape: (b * n_head, s, head_dim)
+                    v = v.permute(1, 0, 2).reshape(b * n_head, src_s, head_dim)
+
+                    if k.is_cuda:
+                        value = self._attention_value(q, k, v, attention_mask.data,
+                            b, src_s, tgt_s, n_head, head_dim)
+                    else:
+                        q = q.float().cpu()
+                        k, v = k.float(), v.float()
+                        value = self._attention_value(q, k, v, attention_mask.data,
+                            b, src_s, tgt_s, n_head, head_dim).cuda().half()
+                else:  # Sparse attention
+                    # shape: (s, b * n_head, head_dim)
+                    k = k_cache.data[:src_s]
+                    k[src_s - 1:src_s] = k_new
+                    # shape: (b * n_head, head_dim, s)
+                    k = k.permute(1, 2, 0).reshape(b * n_head, head_dim, src_s)
+
+                    if k.is_cuda:
+                        value = self._sparse_attention_value(q, k, v_new, v_cache,
+                            attention_mask.data, b, src_s, tgt_s, n_head, head_dim,
+                            attn_sparsity)
+                    else:
+                        q = q.float().cpu()
+                        value = self._sparse_attention_value(q, k, v_new, v_cache,
+                            attention_mask.data, b, src_s, tgt_s, n_head, head_dim,
+                            attn_sparsity).cuda().half()
+            else:  # Mixed device attention
+                assert attn_sparsity >= 1.0
+                value = self._mixed_device_attention(q, k_cache, v_cache,
+                    k_new, v_new, attention_mask.data, b, src_s, tgt_s,
+                    n_head, head_dim)
+
+            # shape: (b, 1, h)
+            value = value.transpose(1, 2).view(b, tgt_s, h)
+            value = F.linear(value, w_out.data, bias=b_out.data)
+
+            value.add_(inputs.data) # Add & Norm
+
+            if donate[0]: inputs.delete()
+            if donate[1]: attention_mask.delete()
+
+            if compress_cache:
+                if comp_config.group_dim == 0:
+                    s_ = src_s // comp_config.group_size * comp_config.group_size
+                    k_new = k[:, :, s_:].permute(2, 0, 1)
+                    v_new = v[:, s_:, :].permute(1, 0, 2)
+                k_new = self.compressed_device.compress(k_new, comp_config)
+                v_new = self.compressed_device.compress(v_new, comp_config)
+            else:
+                k_new = TorchTensor.create_from_torch(k_new, self)
+                v_new = TorchTensor.create_from_torch(v_new, self)
+            # see_memory_usage('---------================-------------------after mha_gen \n')
+            # get_memory('---------================-------------------after mha_gen \n')
+            return TorchTensor.create_from_torch(value, self), k_new, v_new
 
 

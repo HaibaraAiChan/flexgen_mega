@@ -499,7 +499,7 @@ class TorchDevice:
         return TorchTensor.create_from_torch(value, self), k_new, v_new
 
     def mha_gen_TP(self, inputs, attention_mask, w_q, b_q, w_k, b_k, w_v, b_v,
-                w_out, b_out, w_ln, b_ln, n_head, k_cache, v_cache, donate,
+                w_out, b_out, n_head, k_cache, v_cache, donate,
                 attn_sparsity, compress_cache, comp_config, tensor_parallel_size):
         """Multi-head attention (decoding phase)."""
         print('mha_gen decode----------------')
@@ -515,6 +515,7 @@ class TorchDevice:
         b, tgt_s, h = inputs.shape
         src_s = attention_mask.shape[1]
         head_dim = h // n_head
+        
         scaling = head_dim ** -0.5
         
         heads_per_split = n_head // tensor_parallel_size
@@ -559,8 +560,8 @@ class TorchDevice:
         
         # print('return ')
         # return
-        hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
-        print('hidden size ', hidden.size())
+        # hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
+        # print('hidden size ', hidden.size())
         # shape: (b, 1, h)
         q = F.linear(hidden, w_q.data, bias=b_q.data) * scaling
         k = F.linear(hidden, w_k.data, bias=b_k.data)
