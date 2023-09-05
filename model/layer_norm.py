@@ -16,7 +16,9 @@ class Layer_norm:
         self.policy = policy
         self.compute = self.env.gpu
         self.task = None
+     
         
+    # load weights from files downloaded from pretrained model(Meta)
     def init_weight(self, weight_home, path):
         v, h, s, dtype = (self.config.vocab_size, self.config.input_dim,
             self.config.max_seq_len, self.config.dtype)
@@ -32,6 +34,7 @@ class Layer_norm:
         weight_home.store(weights)
 
 
+    # load weights and bias from disk or cpu 
     def load_weight(self, weight_home, weight_read_buf, k):
         w_ln, b_ln = weight_home.val
         if k == 0:
@@ -40,14 +43,15 @@ class Layer_norm:
             weight_read_buf.store((
                 w_ln.smart_copy(dst2), b_ln.smart_copy(dst2)))
     
+    
     def forward(self, hidden, cache_read_buf, weight_read_buf, cache_write_buf, i, k):
         
-        donate = [False] * 14
+        donate = [False] * 4
         h, donate[0] = hidden.val, True
 
         if k == self.policy.num_gpu_batches - 1:
             # Clear the weight_read_buf if it is the last gpu batch
-            ((w_ln, donate[10]), (b_ln, donate[11])) = weight_read_buf.pop()
+            ((w_ln, donate[2]), (b_ln, donate[3])) = weight_read_buf.pop()
         else:
             ((w_ln, _), (b_ln, _)) = weight_read_buf.val
         
