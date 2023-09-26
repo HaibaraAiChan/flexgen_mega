@@ -16,8 +16,8 @@ import torch
 from transformers import AutoTokenizer
 import sys
 sys.path.insert(0,'..')
-# sys.path.insert(0,'../flexgen_additional/')
-sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/flexgen_additional')
+sys.path.insert(0,'../flexgen_additional/')
+# sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/flexgen_additional')
 
 from compression import CompressionConfig
 from opt_config import OptConfig, get_opt_config, download_opt_weights

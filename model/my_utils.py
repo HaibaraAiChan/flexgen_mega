@@ -20,9 +20,10 @@ import math
 import torch
 import sys
 sys.path.insert(0,'..')
-# sys.path.insert(0,'../mpu/')
-sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/mpu')
+sys.path.insert(0,'../mpu/')
+# sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/mpu')
 from global_vars import get_args
+import torch.distributed as dist
 
 def init_method_normal(sigma):
     """Init method based on N(0, sigma)."""
@@ -68,3 +69,10 @@ def openai_gelu(x):
 @torch.jit.script
 def erf_gelu(x):
     return x * 0.5 * (torch.erf(x / 1.41421).to(dtype=x.dtype)+torch.ones_like(x).to(dtype=x.dtype))
+
+def get_world_size_and_world_rank():
+    dist.init_process_group(backend='nccl')
+    world_size = dist.get_world_size()
+    world_rank = dist.get_rank()
+    return world_size, world_rank
+    

@@ -28,8 +28,8 @@ sys.path.insert(0,'..')
 # sys.path.insert(0,'../tokenizer/')
 sys.path.insert(0,'/home/cc/FlexGen/new_flexgen')
 from dist_signal_handler import DistributedSignalHandler
-sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/tokenizer')
-
+# sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/tokenizer')
+sys.path.insert(0,'../tokenizer')
 from tokenizer import build_tokenizer
 from microbatches import build_num_microbatches_calculator
 

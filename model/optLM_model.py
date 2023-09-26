@@ -82,6 +82,7 @@ class OptLM:
         self.policy = policy
         self.num_gpu_batches = policy.num_gpu_batches
         self.name = "OptLM"
+        
 
         layers = []
         layers.append(InputEmbed(self.config, self.env, self.policy))
@@ -289,6 +290,7 @@ class OptLM:
         # Clear the weight_read_buf if it is the last gpu batch
         # Clear the cache_read_buf
         # Run layer computation
+        print('++++++++++++------+++++ compute_layer  layer  ', j)
         self.layers[j].forward(self.hidden[i][j][k], self.cache_read_buf[j][k],
             self.weight_read_buf[j], self.attention_mask[k],
             self.cache_write_buf[j][k], i, k)

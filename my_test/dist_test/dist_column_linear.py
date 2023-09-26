@@ -2,7 +2,8 @@ import torch
 import torch.nn as nn
 import torch.distributed as dist
 
-dist.init_process_group(backend='gloo')
+# dist.init_process_group(backend='gloo')
+dist.init_process_group(backend='nccl')
 world_size = dist.get_world_size()
 world_rank = dist.get_rank()
 
