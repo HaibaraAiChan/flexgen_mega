@@ -14,7 +14,7 @@ from my_utils import get_world_size_and_world_rank
 from flexgen_utils import torch_dtype_to_np_dtype, init_weight_list 
 from pytorch_backend import TorchTensor,TorchDevice, TorchDisk, TorchLink,TorchMixedDevice, DeviceType, general_copy, fix_recursive_import
 DUMMY_WEIGHT = "_DUMMY_"  # Use dummy weights for benchmark purposes
-sys.path.insert(0,'/home/cc/my_flexgen/model/utils/')
+sys.path.insert(0,'./utils/')
 from cuda_mem_usage import see_memory_usage
 from cpu_mem_usage import get_memory
 # dist.init_process_group(backend='nccl')
@@ -42,12 +42,12 @@ class SelfAttention:
         # world_size, world_rank = get_world_size_and_world_rank()
         
         # self.num_gpus = world_size
-        self.num_gpus = 1 # -------------------- for simply
+        # self.num_gpus = 1 # -------------------- for simply
         
-        split_sizes = [self.output // self.num_gpus for _ in range(self.num_gpus)]
-        split_sizes[-1] += self.output  % self.num_gpus
-        print('split sizes ', split_sizes)
-        self.split_idx=split_sizes
+        # split_sizes = [self.output // self.num_gpus for _ in range(self.num_gpus)]
+        # split_sizes[-1] += self.output  % self.num_gpus
+        # print('split sizes ', split_sizes)
+        # self.split_idx=split_sizes
         
     def set_task(self, task):
         self.task = task
@@ -79,19 +79,9 @@ class SelfAttention:
         ]
         
         weights = init_weight_list(weight_specs, self.policy, self.env)
-        # import sys
-        # size_in_bytes = sys.getsizeof(weight_home)
-        # print(f"Size of self.weight_home: {size_in_bytes} bytes")
-        
-        # # get_memory('-------------------before weight_home.store(weights) ')
-        # print('weights length ',len(weights) )
-        # print('weights[0] shape ',weights[0].shape )
-        # if len(weights)>1:
-        #     print('weights[1] shape ',weights[1].shape )
+        see_memory_usage('-------------------before weight_home.store(weights) ')
         weight_home.store(weights)
-        # print('weight_home ', weight_home)
-        # get_memory('-----------------------------after weight_home.store(weights) ')
-        # weight_home.store(weights)
+        see_memory_usage('-----------------------------after weight_home.store(weights) ')
 
     def load_weight(self, weight_home, weight_read_buf, k):
         w_q, b_q, w_k, b_k, w_v, b_v, w_out, b_out = weight_home.val

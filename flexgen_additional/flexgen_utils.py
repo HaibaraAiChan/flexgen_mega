@@ -11,6 +11,16 @@ from typing import Tuple, Union, Optional, Any, Sequence, List
 import numpy as np
 import torch
 from flexgen.compression import CompressionConfig
+
+import torch.distributed as dist
+
+# dist.init_process_group(backend='gloo')
+# dist.init_process_group(backend='nccl')
+# world_size = dist.get_world_size()
+# world_rank = dist.get_rank()
+
+
+
 DUMMY_WEIGHT = "_DUMMY_"  # Use dummy weights for benchmark purposes
 
 
@@ -186,6 +196,17 @@ class ValueHolder:
 
     def clear(self):
         self.val = None
+        
+    # def get_length(self):
+    #     """
+    #     Get the length of the 'val' attribute if it's a sequence or None if it's not.
+    #     """
+    #     if self.val is None:
+    #         return 0
+    #     elif isinstance(self.val, (list, tuple, str)):
+    #         return len(self.val)
+    #     else:
+    #         raise ValueError("ValueHolder 'val' is not a sequence (list, tuple, or string).")
 
 
 def array_1d(a, cls):
@@ -373,8 +394,11 @@ def init_weight_list(weight_specs, policy, env):
     ret = []
     for i in range(len(weight_specs)):
         mid_percent = (sizes_cumsum[i] - sizes[i] / 2) / sizes_cumsum[-1]
+        print('*********-------=-=-=--mid_percent ', mid_percent)
         home = get_choice(mid_percent * 100, dev_percents, dev_choices)
+        print('home device is ', home)
         shape, dtype, filename = weight_specs[i]
+        print("weight_specs[i] ", weight_specs[i])
 
         if len(shape) < 2:
             pin_memory = True
@@ -388,6 +412,7 @@ def init_weight_list(weight_specs, policy, env):
 
             if DUMMY_WEIGHT not in filename:
                 weight.load_from_np_file(weight_specs[i][2])
+                print('weight shape ', weight.shape)
             else:
                 weight.load_from_np(np.ones(shape, dtype))
                 #weight.load_from_np(np.random.rand(*shape).astype(dtype))
@@ -403,4 +428,69 @@ def init_weight_list(weight_specs, policy, env):
                     x.load_from_np(np.ones(x.shape, torch_dtype_to_np_dtype[x.dtype]))
 
         ret.append(weight)
+        # print('ret ', ret)
+        # print('ret[0] ', ret[0].shape)
+        # if len(ret)>1:
+        #     print('ret[1] ', ret[1].shape)
+    return ret
+
+
+def init_weight_list_tensor_parallel(weight_specs, policy, env):
+    dev_percents = [policy.w_disk_percent, policy.w_cpu_percent, policy.w_gpu_percent]
+    dev_choices = [env.disk, env.cpu, env.gpu]
+
+    sizes = [np.prod(spec[0]) for spec in weight_specs]
+    sizes_cumsum = np.cumsum(sizes)
+    ret = []
+    for i in range(len(weight_specs)):
+        mid_percent = (sizes_cumsum[i] - sizes[i] / 2) / sizes_cumsum[-1]
+        print('*********-------=-=-=--mid_percent ', mid_percent)
+        home = get_choice(mid_percent * 100, dev_percents, dev_choices)
+        print('home device is ', home)
+        shape, dtype, filename = weight_specs[i]
+        print("weight_specs[i] ", weight_specs[i])
+
+        if len(shape) < 2:
+            pin_memory = True
+            compress = False
+        else:
+            pin_memory = policy.pin_weight
+            compress = policy.compress_weight
+
+        if not compress:
+            weight = home.allocate(shape, dtype, pin_memory=pin_memory)
+
+            if DUMMY_WEIGHT not in filename:
+                weight.load_from_np_file(weight_specs[i][2])
+                print('load_from_np_file,  weight shape ', weight.shape)
+                # dist.init_process_group(backend='nccl')
+                world_size = dist.get_world_size()
+                world_rank = dist.get_rank()
+                
+                output_size_per_partition = divide(output_size, world_size)
+
+                weight_list = torch.split(weight, output_size_per_partition, dim=1)
+                
+                
+                my_weight_list = weight_list[rank::world_size]
+            else:
+                print('DUMMY weights ')
+                weight.load_from_np(np.ones(shape, dtype))
+                #weight.load_from_np(np.random.rand(*shape).astype(dtype))
+        else:
+            weight = home.compressed_device.allocate(
+                shape, dtype, policy.comp_weight_config, pin_memory=pin_memory)
+
+            if DUMMY_WEIGHT not in filename:
+                weight.load_from_np_file(weight_specs[i][2])
+            else:
+                for i in range(2):
+                    x = weight.data[i]
+                    x.load_from_np(np.ones(x.shape, torch_dtype_to_np_dtype[x.dtype]))
+
+        ret.append(weight)
+        # print('ret ', ret)
+        # print('ret[0] ', ret[0].shape)
+        # if len(ret)>1:
+        #     print('ret[1] ', ret[1].shape)
     return ret

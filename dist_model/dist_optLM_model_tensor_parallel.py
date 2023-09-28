@@ -404,7 +404,7 @@ class OptLM:
             if not overlap:
                 # No overlap, easy to understand, suitable for debugging
                 print('============ generate loop normal ============')
-                self.generation_loop_normal()
+                self.generation_loop_normal() #-------***----------------------------------------------------***
             else:
                 # Overlap I/O and compute
                 if num_gpu_batches == 1:

@@ -10,7 +10,7 @@ from torch.nn.parameter import Parameter
 from torch.nn import init
 import sys
 sys.path.insert(0,'..')
-sys.path.insert(0,'../mpu/')
+# sys.path.insert(0,'../mpu/')
 sys.path.insert(0,'/home/cc/my_flexgen/mpu')
 from mpu_random import make_viewless_tensor
 

@@ -26,8 +26,8 @@ sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/flexgen_additional')
 from flexgen_utils import (GB, T, cpu_mem_stats, vector_gather,
     np_dtype_to_torch_dtype, torch_dtype_to_np_dtype,
     torch_dtype_to_num_bytes)
-# sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/model')
-sys.path.insert(0,'../model')
+sys.path.insert(0,'/home/cc/my_flexgen/model')
+# sys.path.insert(0,'../dist_model')
 from fused_layer_norm import FusedLayerNorm
 
 general_copy_compressed = TorchCompressedDevice = None

@@ -78,7 +78,7 @@ class SelfAttention:
             # ((h,), dtype, path + "_layer_norm.bias"),
         ]
         
-        weights = init_weight_list(weight_specs, self.policy, self.env)
+        weights = init_weight_list_tensor_parallel(weight_specs, self.policy, self.env)
         # import sys
         # size_in_bytes = sys.getsizeof(weight_home)
         # print(f"Size of self.weight_home: {size_in_bytes} bytes")
@@ -238,7 +238,7 @@ class SelfAttention:
             
             cache_write_buf.store((new_k_cache, new_v_cache))
         else:  # decoding
-            print('self attention decode =======')
+            print('-----------------self attention decode =======')
             self.prefill = False
             
             mask, donate[1] = attention_mask.val.smart_copy(self.attention_compute)
