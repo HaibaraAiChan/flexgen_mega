@@ -68,12 +68,13 @@ DUMMY_WEIGHT = "_DUMMY_"  # Use dummy weights for benchmark purposes
 
 
 
-class OptLM:
+class OptLM_TP:
     def __init__(self,
                  config: Union[str, OptConfig],
                  env: ExecutionEnv,
                  path: str,
-                 policy: Policy):
+                 policy: Policy,
+                 local_rank: int):
         if isinstance(config, str):
             config = get_opt_config(config)
         self.config = config
@@ -81,7 +82,8 @@ class OptLM:
         self.path = path
         self.policy = policy
         self.num_gpu_batches = policy.num_gpu_batches
-        self.name = "OptLM"
+        self.rank  = local_rank
+        self.name = "OptLM_TP"
         
 
         layers = []

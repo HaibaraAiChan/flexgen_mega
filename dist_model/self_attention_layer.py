@@ -12,6 +12,7 @@ sys.path.insert(0,'../flexgen_additional/')
 from my_utils import get_world_size_and_world_rank
 # sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/flexgen_additional')
 from flexgen_utils import torch_dtype_to_np_dtype, init_weight_list 
+from flexgen_utils import init_weight_list_tensor_parallel 
 from pytorch_backend import TorchTensor,TorchDevice, TorchDisk, TorchLink,TorchMixedDevice, DeviceType, general_copy, fix_recursive_import
 DUMMY_WEIGHT = "_DUMMY_"  # Use dummy weights for benchmark purposes
 sys.path.insert(0,'/home/cc/my_flexgen/model/utils/')
@@ -77,7 +78,13 @@ class SelfAttention:
             # # b_ln
             # ((h,), dtype, path + "_layer_norm.bias"),
         ]
-        
+        # local_rank = int(os.environ.get("LOCAL_RANK"))
+        # # rank = torch.distributed.get_rank()
+        # print('self attention layer local rank , ', local_rank)
+        # if torch.distributed.get_rank() == 0:
+        #     print('> testing initialize_model_parallel with size {} ...'.format(20))
+        # if torch.distributed.get_rank() == 1:
+        #     print('> testing initialize_model_parallel with size {} ...'.format(40))
         weights = init_weight_list_tensor_parallel(weight_specs, self.policy, self.env)
         # import sys
         # size_in_bytes = sys.getsizeof(weight_home)
@@ -211,7 +218,7 @@ class SelfAttention:
         return (batch_size, seq_len, self.config.input_dim), self.config.dtype
 
     def forward(self, hidden, cache_read_buf, weight_read_buf, attention_mask,
-                cache_write_buf, i, k, split_idx):
+                cache_write_buf, i, k):
         n_head = self.config.n_head
         print('------------------************   number of head', n_head)
 

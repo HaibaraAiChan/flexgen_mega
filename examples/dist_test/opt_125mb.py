@@ -18,6 +18,9 @@ import sys
 sys.path.insert(0,'..')
 sys.path.insert(0,'../../flexgen_additional/')
 # sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/flexgen_additional')
+from dist_utils import initialize_distributed
+from dist_utils import initialize_distributed_TP
+from dist_utils import initialize_distributed_test
 
 from compression import CompressionConfig
 from opt_config import OptConfig, get_opt_config, download_opt_weights
@@ -36,7 +39,7 @@ from transformer_layer import TransformerLayer
 from input_layer import InputEmbed
 from output_layer import OutputEmbed
 from flexgen_utils import init_weight_list, Policy
-from dist_optLM_model_tensor_parallel import OptLM
+from dist_optLM_model_tensor_parallel import OptLM_TP
 fix_recursive_import()
 
 DUMMY_WEIGHT = "_DUMMY_"  # Use dummy weights for benchmark purposes
@@ -111,7 +114,8 @@ def run_flexgen(args):
     print("init weight...")
     print('start create model ')
     time_m = time.time()
-    model = OptLM(opt_config, env, args.path, policy)
+    print('args.rank', args.rank)
+    model = OptLM_TP(opt_config, env, args.path, policy, args.local_rank)
     print('the model construction time ', time.time()-time_m)
     print('   model structure ')
     for layer in model.layers:
@@ -182,6 +186,7 @@ def run_flexgen(args):
 
 
 def add_parser_arguments(parser):
+    
     parser.add_argument("--model", type=str, default="facebook/opt-125m",
         help="The model name.")
     parser.add_argument("--path", type=str, default="~/opt_weights",
@@ -229,12 +234,57 @@ def add_parser_arguments(parser):
     parser.add_argument("--overlap", type=str2bool, nargs='?',
         const=True, default=False)
 
+def add_distributed_parser_arguments(parser):
+    parser.add_argument('--head-ip', type=str, default=None, help='the IP address of the head node')
+    parser.add_argument('--port', type=int, default=None, help='the port of the head node')
+    parser.add_argument('--rank', metavar='I', type=int, default=None)
+    parser.add_argument('--local-rank', metavar='I', type=int, default=None)
+    parser.add_argument('--world-size', metavar='N', type=int, default=None)
+    parser.add_argument('--use-mpi', action='store_true', default=False,
+                        help="Get distributed info from MPI")
+    parser.add_argument('--comm-device', type=str, default='gpu',
+                        choices=['gpu', 'cpu'],
+                        help='communication through gpu nvlink or cpu memory '
+                             'and socket')
+    parser.add_argument('--num-inner-iterations', metavar='I', type=int, default=None)
+    parser.add_argument('--async-comm', action='store_true', default=False,
+                        help="Use asynchronous communication")
+
 
 if __name__ == "__main__":
+    # parser = argparse.ArgumentParser()
+    # add_parser_arguments(parser)
+    # args = parser.parse_args()
+
     parser = argparse.ArgumentParser()
     add_parser_arguments(parser)
+    add_distributed_parser_arguments(parser)
     args = parser.parse_args()
 
-    assert len(args.percent) == 6
 
+    if args.head_ip is not None and args.port is not None:
+        print('args.head_ip ', args.head_ip)
+        print('args.port ', args.port )
+        if args.use_mpi:
+            # args.world_size = int(os.getenv('WORLD_SIZE','2'))
+            args.world_size = int(os.getenv('OMPI_COMM_WORLD_SIZE'))
+            print('args.world_size ', args.world_size)
+            args.rank = int(os.getenv('OMPI_COMM_WORLD_RANK'))
+            # args.rank = int(os.getenv('RANK', '0'))
+            print('args.rank ', args.rank)
+            args.local_rank = int(os.getenv('OMPI_COMM_WORLD_LOCAL_RANK'))
+            # args.local_rank = int(os.getenv('local_rank', '0'))
+            print('local_rank ', args.local_rank)
+        initialize_distributed_TP(args.head_ip, args.port, args.world_size, args.rank, args.local_rank, args.comm_device)
+    else:
+        print('not init distributed')
+        initialize_distributed_test(args=args)
+        
+        args.world_size = 1
+        args.rank = 0
+        args.local_rank = 0
+
+
+    assert len(args.percent) == 6
+    
     run_flexgen(args)
