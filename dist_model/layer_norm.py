@@ -1,8 +1,8 @@
 import os
 import sys
-sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/flexgen_additional')
+sys.path.insert(0,'/home/cc/new_flexgen/flexgen_additional')
 from flexgen_utils import init_weight_list
-
+from pytorch_backend import TorchTensor,TorchDevice, TorchDisk, TorchLink,TorchMixedDevice, DeviceType, general_copy, fix_recursive_import
 #### not finished the modification yet
 
 class Layer_norm:
@@ -32,8 +32,26 @@ class Layer_norm:
         ]
         weights = init_weight_list(weight_specs, self.policy, self.env)
         weight_home.store(weights)
+    def set_task(self, task):
+        self.task = task
+        
+    def init_cache_one_gpu_batch(self, cache_home):
+        if self.policy.cache_gpu_percent == 100:
+            device = self.env.gpu
+        elif self.policy.cache_cpu_percent == 100:
+            device = self.env.cpu
+        elif self.policy.cache_disk_percent == 100:
+            device = self.env.disk
+        else:
+            device = self.env.mixed
 
+        if self.policy.compress_cache:
+            assert device.device_type != DeviceType.MIXED
+            device = device.compressed_device
 
+        cache = device.init_cache_one_gpu_batch(self.config, self.task, self.policy)
+        cache_home.store(cache)
+        
     # load weights and bias from disk or cpu 
     def load_weight(self, weight_home, weight_read_buf, k):
         w_ln, b_ln = weight_home.val
@@ -43,11 +61,15 @@ class Layer_norm:
             weight_read_buf.store((
                 w_ln.smart_copy(dst2), b_ln.smart_copy(dst2)))
     
+    def store_cache(self, cache_home, cache_write_buf, i):
+        pass  # do nothing
     
-    def forward(self, hidden, cache_read_buf, weight_read_buf, cache_write_buf, i, k):
+    def forward(self, hidden, cache_read_buf, weight_read_buf, cache_write_buf, attention_mask, i, k):
         
         donate = [False] * 4
         h, donate[0] = hidden.val, True
+        # mask, donate[1] = attention_mask.val.smart_copy(self.compute)
+
 
         if k == self.policy.num_gpu_batches - 1:
             # Clear the weight_read_buf if it is the last gpu batch

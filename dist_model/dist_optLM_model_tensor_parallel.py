@@ -1,5 +1,6 @@
 from self_attention_layer import SelfAttention
 from MLP_layer import MLP
+from layer_norm import Layer_norm
 from transformer_layer import TransformerLayer
 from input_layer import InputEmbed
 from output_layer import OutputEmbed
@@ -90,6 +91,7 @@ class OptLM_TP:
         layers.append(InputEmbed(self.config, self.env, self.policy))
         for i in range(self.config.num_hidden_layers):
             if policy.sep_layer:
+                layers.append(Layer_norm(self.config, self.env, self.policy, i))
                 layers.append(SelfAttention(self.config, self.env, self.policy, i))
                 layers.append(MLP(self.config, self.env, self.policy, i))
             else:
@@ -293,6 +295,7 @@ class OptLM_TP:
         # Clear the cache_read_buf
         # Run layer computation
         print('++++++++++++------+++++ compute_layer  layer  ', j)
+        
         self.layers[j].forward(self.hidden[i][j][k], self.cache_read_buf[j][k],
             self.weight_read_buf[j], self.attention_mask[k],
             self.cache_write_buf[j][k], i, k)
@@ -369,7 +372,9 @@ class OptLM_TP:
         overlap = self.policy.overlap
         prompt_len, gen_len = task.prompt_len, task.gen_len
         self.execute_gen_len = task.cut_gen_len if task.cut_gen_len else task.gen_len
-
+        print('task.prompt_len, ', task.prompt_len)
+        print('task.gen_len ', task.gen_len)
+        print('self.execute_gen_len, ', self.execute_gen_len)
         # Output token ids
         self.output_ids = np.full((len(task.inputs), prompt_len + gen_len),
             self.config.pad_token_id, dtype=np.int32)
@@ -390,8 +395,10 @@ class OptLM_TP:
             self.weight_read_buf[j].clear()
         for k in range(num_gpu_batches):
             self.attention_mask[k].clear()
+        print('gen_len........ ', gen_len)
+        print('num_gpu_batches ', num_gpu_batches)
         self.hidden = array_3d(gen_len, num_layers, num_gpu_batches, ValueHolder)
-
+        print('self.hidden shape ', len(self.hidden))
         # Init cache
         self.set_task(task)
         for j in range(num_layers):
@@ -437,6 +444,11 @@ class OptLM_TP:
         return self.output_ids
 
     def generation_loop_normal(self):
+        print('generation_loop_normal start.........')
+        print('i: self.execute_gen_len ', self.execute_gen_len)
+        print('j: self.num_layers ', self.num_layers)
+        print('k: self.num_gpu_batches ', self.num_gpu_batches)
+        
         for i in range(self.execute_gen_len):
             if i == 0: 
                 print('generate start -----')
@@ -444,13 +456,16 @@ class OptLM_TP:
             timers("generate").start()
             for k in range(self.num_gpu_batches):
                 self.update_attention_mask(i, k)
+                
             for j in range(self.num_layers):
                 for k in range(self.num_gpu_batches):
                     self.load_weight(i, j, k, overlap=False)
 
                 for k in range(self.num_gpu_batches):
                     self.load_cache(i, j, k, overlap=False)
+                    print("load_cache ")
                     self.load_hidden(i, j, k)
+                    print("load hidden i ", i)
                     self.compute_layer(i, j, k)
                     self.store_hidden(i, j, k)
                     self.store_cache(i, j, k, overlap=False)

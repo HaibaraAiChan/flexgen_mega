@@ -224,12 +224,14 @@ class SelfAttention:
 
         donate = [False] * 14
         h, donate[0] = hidden.val, True
-
+        print('self attention layer hidden value: ', hidden.val)
         if k == self.policy.num_gpu_batches - 1:
+            print('Clear the weight_read_buf if it is the last gpu batch... ')
             # Clear the weight_read_buf if it is the last gpu batch
             ((w_q, donate[2]), (b_q, donate[3]), (w_k, donate[4]), (b_k, donate[5]),
              (w_v, donate[6]), (b_v, donate[7]), (w_out, donate[8]), (b_out, donate[9])) = weight_read_buf.pop()
         else:
+            print(' weight_read_buf if it is not not last gpu batch... ')
             ((w_q, _), (b_q, _), (w_k, _), (b_k, _),
              (w_v, _), (b_v, _), (w_out, _), (b_out, _)) = weight_read_buf.val
 
@@ -238,9 +240,11 @@ class SelfAttention:
             self.prefill = True
             
             mask, donate[1] = attention_mask.val.smart_copy(self.compute)
+            print('self.compute ', self.compute) # cuda
             
-            h, new_k_cache, new_v_cache = self.compute.mha(h, mask, w_q, b_q,
-                w_k, b_k, w_v, b_v, w_out, b_out,  n_head, donate,
+            
+            h, new_k_cache, new_v_cache = self.compute.mha_TP(h, mask, w_q, b_q,
+                w_k, b_k, w_v, b_v, w_out, b_out, n_head, donate,
                 self.policy.compress_cache, self.policy.comp_cache_config)
             
             cache_write_buf.store((new_k_cache, new_v_cache))

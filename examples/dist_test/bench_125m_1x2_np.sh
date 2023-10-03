@@ -21,7 +21,7 @@ mpirun \
     --port 7777 \
     --use-mpi \
     --model facebook/opt-125m \
-    --gpu-batch-size 12 \
+    --gpu-batch-size 4 \
     --percent 100 0 100 0 100 0\
     --comm-device gpu \
     --cut-gen-len 5 \

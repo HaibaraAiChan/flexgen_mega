@@ -467,6 +467,7 @@ def init_weight_list_tensor_parallel(weight_specs, policy, env):
                 world_size = dist.get_world_size()
                 world_rank = dist.get_rank()
                 
+                
                 output_size_per_partition = divide(output_size, world_size)
 
                 weight_list = torch.split(weight, output_size_per_partition, dim=1)

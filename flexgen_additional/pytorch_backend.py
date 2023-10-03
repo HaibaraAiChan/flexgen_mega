@@ -310,7 +310,7 @@ class TorchDevice:
         return k_cache, v_cache
 
     def mha(self, inputs, attention_mask, w_q, b_q, w_k, b_k, w_v, b_v,
-            w_out, b_out, w_ln, b_ln, n_head, donate, compress_cache, comp_config):
+            w_out, b_out,w_ln, b_ln, n_head, donate, compress_cache, comp_config):
         """Multi-head attention (prefill phase)."""
         print('mha prefill----------------')
         # decompress weights
@@ -324,10 +324,91 @@ class TorchDevice:
         head_dim = h // n_head
         scaling = head_dim ** -0.5
         
+        print(' inputs.shape ',  inputs.shape)
+        print('head_dim = h // n_head ', head_dim)
         # modified start--------------
         # hidden = FusedLayerNorm()
         # modified --------------end
         hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
+        
+        
+        # see_memory_usage('---------================-------------------before q, k, v \n')
+        # get_memory('---------================-------------------before q, k, v \n')
+        # shape: (b, s, h)
+        q = F.linear(hidden, w_q.data, bias=b_q.data) * scaling
+        k = F.linear(hidden, w_k.data, bias=b_k.data)
+        v = F.linear(hidden, w_v.data, bias=b_v.data)
+        # shape: (b, s, n_head, head_dim)
+        q = q.view(b, s, n_head, head_dim)
+        k = k.view(b, s, n_head, head_dim)
+        v = v.view(b, s, n_head, head_dim)
+
+        # shape: (b * n_head, s, head_dim)
+        q = q.permute(0, 2, 1, 3).reshape(b * n_head, s, head_dim)
+        # shape: (b * n_head, head_dim, s)
+        k = k.permute(0, 2, 3, 1).reshape(b * n_head, head_dim, s)
+        # shape: (b * n_head, s, head_dim)
+        v = v.permute(0, 2, 1, 3).reshape(b * n_head, s, head_dim)
+
+        # shape: (b * n_head, s, s)
+        attn_weights = torch.bmm(q, k)
+
+        # shape: (b, 1, s, s)
+        idx = torch.arange(s, device=self.dev)
+        causal_mask = (idx <= idx.view(s, 1)).view(1, 1, s, s)
+        mask = attention_mask.data.view(b, 1, 1, s) & causal_mask
+
+        # shape: (b, n_head, s, s)
+        attn_weights = attn_weights.view(b, n_head, s, s)
+        attn_weights = torch.where(mask, attn_weights, -1e4)
+        attn_weights = attn_weights.view(b * n_head, s, s)
+        attn_weights = F.softmax(attn_weights, dim=2)
+        # shape: (b, n_head, s, head_dim)
+        value = torch.bmm(attn_weights, v).view(b, n_head, s, head_dim)
+        # shape: (b, s, h)
+        value = value.transpose(1, 2).reshape(b, s, h)
+        value = F.linear(value, w_out.data, bias=b_out.data)
+
+        value.add_(inputs.data)
+
+        if donate[0]: inputs.delete()
+        if donate[1]: attention_mask.delete()
+
+        # (s, b * n_head, head_dim)
+        k = k.permute(2, 0, 1)
+        v = v.permute(1, 0, 2)
+
+        if compress_cache:
+            k = self.compressed_device.compress(k, comp_config)
+            v = self.compressed_device.compress(v, comp_config)
+        else:
+            k = TorchTensor.create_from_torch(k, self)
+            v = TorchTensor.create_from_torch(v, self)
+        # see_memory_usage('---------================-------------------after mha \n')
+        # get_memory('---------================-------------------after mha \n')
+        return TorchTensor.create_from_torch(value, self), k, v
+    
+    def mha_TP(self, inputs, attention_mask, w_q, b_q, w_k, b_k, w_v, b_v,
+            w_out, b_out, n_head, donate, compress_cache, comp_config):
+        """Multi-head attention (prefill phase)."""
+        print('mha prefill----------------')
+        # decompress weights
+        if w_q.device.device_type == DeviceType.COMPRESSED:
+            w_q = w_q.device.decompress(w_q)
+            w_k = w_k.device.decompress(w_k)
+            w_v = w_v.device.decompress(w_v)
+            w_out = w_out.device.decompress(w_out)
+
+        b, s, h = inputs.shape
+        head_dim = h // n_head
+        scaling = head_dim ** -0.5
+        
+        print(' inputs.shape ',  inputs.shape)
+        print('head_dim = h // n_head ', head_dim)
+        # modified start--------------
+        # hidden = FusedLayerNorm()
+        # modified --------------end
+        # hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
         
         
         # see_memory_usage('---------================-------------------before q, k, v \n')
@@ -512,7 +593,7 @@ class TorchDevice:
             w_k = w_k.device.decompress(w_k)
             w_v = w_v.device.decompress(w_v)
             w_out = w_out.device.decompress(w_out)
-
+        print()
         b, tgt_s, h = inputs.shape
         src_s = attention_mask.shape[1]
         head_dim = h // n_head
