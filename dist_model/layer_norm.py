@@ -63,6 +63,8 @@ class Layer_norm:
     
     def store_cache(self, cache_home, cache_write_buf, i):
         pass  # do nothing
+    def load_cache(self, cache_home, cache_read_buf, i):
+        pass  # do nothing
     
     def forward(self, hidden, cache_read_buf, weight_read_buf, cache_write_buf, attention_mask, i, k):
         

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 MY_IPADDR=$(hostname -i)
+MY_IPADDR=127.0.0.1
 all_hosts=$MY_IPADDR
 N_GPUS=2
 N_CORES_PER_GPU=6

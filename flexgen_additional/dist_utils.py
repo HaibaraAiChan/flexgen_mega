@@ -90,13 +90,17 @@ def get_world_size():
 
 def initialize_distributed_TP(head_ip, port, world_size, rank, local_rank,
                            comm_device):
+    free_port = find_free_port()
+    print('free port ', free_port)
     # Arguments:
     #    model_parallel_size: number of GPUs used to parallelize model.
     print(f'Initializing distributed environment '
           f'world_size={world_size}, rank={rank}, local_rank={local_rank}.')
-    free_port = find_free_port()
-    print('free port ', free_port)
+
+    print('local rank ', local_rank)
     torch.cuda.set_device(local_rank)
+   
+
     distributed_init_method = f'tcp://{head_ip}:{free_port}'
     global _COMM_DEVICE
     _COMM_DEVICE = comm_device
@@ -107,17 +111,21 @@ def initialize_distributed_TP(head_ip, port, world_size, rank, local_rank,
     else:
         raise ValueError(f'Unknown comm_device: {comm_device}')
     print('--=-=-=-=-==-=-=-====-----------   open mpi rank ', rank)
-    rank = int(os.getenv('RANK', '0'))
-    world_size = int(os.getenv("WORLD_SIZE", '1'))
-    print('world_size ', world_size )
+    # rank = int(os.getenv('RANK', '0'))
+    # world_size = int(os.getenv("WORLD_SIZE", '1'))
+    # print('world_size ', world_size )
     
-    print('> initializing torch.distributed with local rank: {}, '
-          'rank: {}, world size: {}'.format(local_rank, rank, world_size))
-
-    
+    # print('> initializing torch.distributed with local rank: {}, '
+    #       'rank: {}, world size: {}'.format(local_rank, rank, world_size))
+    # dist.init_process_group(backend=backend,
+    #                         init_method=distributed_init_method,
+    #                         world_size=2,
+    #                         rank=rank)
+    # export MASTER_ADDR=localhost
+    # export MASTER_PORT=29500
     dist.init_process_group(backend=backend,
-                            init_method=distributed_init_method,
-                            world_size=world_size,
+                            init_method="env://",
+                            world_size=2,
                             rank=rank)
     # Create groups for tensor parallelism
     global _TENSOR_PARALLEL_GROUP

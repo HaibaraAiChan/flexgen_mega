@@ -18,7 +18,7 @@ import sys
 sys.path.insert(0,'..')
 sys.path.insert(0,'../../flexgen_additional/')
 # sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/flexgen_additional')
-from dist_utils import initialize_distributed
+# from dist_utils import initialize_distributed
 from dist_utils import initialize_distributed_TP
 from dist_utils import initialize_distributed_test
 
@@ -41,6 +41,8 @@ from output_layer import OutputEmbed
 from flexgen_utils import init_weight_list, Policy
 from dist_optLM_model_tensor_parallel import OptLM_TP
 fix_recursive_import()
+
+import torch.distributed as dist
 
 DUMMY_WEIGHT = "_DUMMY_"  # Use dummy weights for benchmark purposes
 
@@ -264,17 +266,25 @@ if __name__ == "__main__":
 
     if args.head_ip is not None and args.port is not None:
         print('args.head_ip ', args.head_ip)
-        print('args.port ', args.port )
+        # print('args.port ', args.port )
         if args.use_mpi:
             # args.world_size = int(os.getenv('WORLD_SIZE','2'))
             args.world_size = int(os.getenv('OMPI_COMM_WORLD_SIZE'))
-            print('args.world_size ', args.world_size)
+            # print('args.world_size ', args.world_size)
             args.rank = int(os.getenv('OMPI_COMM_WORLD_RANK'))
             # args.rank = int(os.getenv('RANK', '0'))
-            print('args.rank ', args.rank)
+            # print('args.rank ', args.rank)
             args.local_rank = int(os.getenv('OMPI_COMM_WORLD_LOCAL_RANK'))
             # args.local_rank = int(os.getenv('local_rank', '0'))
-            print('local_rank ', args.local_rank)
+            # print('local_rank ', args.local_rank)
+            if dist.is_available():
+                print("Distributed package is available!")
+            else:
+                print("Distributed package is not available.")
+            if dist.is_initialized():
+                print(f"Backend: {dist.get_backend()}")
+                print(f"World Size: {dist.get_world_size()}")
+                print(f"Rank: {dist.get_rank()}")
         initialize_distributed_TP(args.head_ip, args.port, args.world_size, args.rank, args.local_rank, args.comm_device)
     else:
         print('not init distributed')

@@ -29,6 +29,7 @@ from flexgen_utils import (GB, T, cpu_mem_stats, vector_gather,
 sys.path.insert(0,'/home/cc/my_flexgen/model')
 # sys.path.insert(0,'../dist_model')
 from fused_layer_norm import FusedLayerNorm
+import torch.distributed as dist
 
 general_copy_compressed = TorchCompressedDevice = None
 global_cpu_device = None
@@ -405,12 +406,11 @@ class TorchDevice:
         
         print(' inputs.shape ',  inputs.shape)
         print('head_dim = h // n_head ', head_dim)
-        # modified start--------------
-        # hidden = FusedLayerNorm()
-        # modified --------------end
+        
         # hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
         
-        
+        hidden = inputs.data
+        print('hidden type', type(hidden))
         # see_memory_usage('---------================-------------------before q, k, v \n')
         # get_memory('---------================-------------------before q, k, v \n')
         # shape: (b, s, h)
@@ -582,7 +582,7 @@ class TorchDevice:
 
     def mha_gen_TP(self, inputs, attention_mask, w_q, b_q, w_k, b_k, w_v, b_v,
                 w_out, b_out, n_head, k_cache, v_cache, donate,
-                attn_sparsity, compress_cache, comp_config, tensor_parallel_size):
+                attn_sparsity, compress_cache, comp_config):
         """Multi-head attention (decoding phase)."""
         print('mha_gen decode----------------')
         
@@ -595,86 +595,130 @@ class TorchDevice:
             w_out = w_out.device.decompress(w_out)
         print()
         b, tgt_s, h = inputs.shape
+        print('b, tgt_s, h: '+ str(b )+" "+str(tgt_s)+' '+str(h))
         src_s = attention_mask.shape[1]
         head_dim = h // n_head
         
         scaling = head_dim ** -0.5
+        world_size = torch.distributed.get_world_size()
+        print("world_size_mha_gen_TP", world_size)
+        tensor_parallel_size = world_size
+        rank= torch.distributed.get_rank() 
         
-        heads_per_split = n_head // tensor_parallel_size
+        # heads_per_split = n_head // tensor_parallel_size
+        print('tensor_parallel_size ', tensor_parallel_size)
+        print('w_q.data.shape ', w_q.data.shape)
+        tmp = w_q.data.view(h, tensor_parallel_size, h // tensor_parallel_size)
+        print('w_q.data.view(h, tensor_parallel_size, h // tensor_parallel_size) ', tmp.shape)
+        
         q_weight_partitions = nn.ParameterList([
-            nn.Parameter(w_q.view(h, h // tensor_parallel_size))
-            for _ in range(tensor_parallel_size)
+            nn.Parameter(w_q.data.view(h, tensor_parallel_size, h // tensor_parallel_size))
         ])
-        k_weight_partitions = nn.ParameterList([
-            nn.Parameter(w_k.view(h, h // tensor_parallel_size))
-            for _ in range(tensor_parallel_size)
-        ])
-        v_weight_partitions = nn.ParameterList([
-            nn.Parameter(w_v.view(h, h // tensor_parallel_size))
-            for _ in range(tensor_parallel_size)
-        ])
-        out_weight_partitions = nn.ParameterList([
-            nn.Parameter(w_out.view(h, h // tensor_parallel_size))
-            for _ in range(tensor_parallel_size)
-        ])
-        q_bias_partitions = nn.ParameterList([
-            nn.Parameter(b_q.view(h // tensor_parallel_size))
-            for _ in range(tensor_parallel_size)
-        ])
-        k_bias_partitions = nn.ParameterList([
-            nn.Parameter(b_k.view(h // tensor_parallel_size))
-            for _ in range(tensor_parallel_size)
-        ])
-        v_bias_partitions = nn.ParameterList([
-            nn.Parameter(b_v.view(h // tensor_parallel_size))
-            for _ in range(tensor_parallel_size)
-        ])
-        out_bias_partitions = nn.ParameterList([
-            nn.Parameter(b_out.view(h // tensor_parallel_size))
-            for _ in range(tensor_parallel_size)
-        ])
-        # batch_size, seq_len, _ = x.size()
-        # weight = weight_partitions[split_idx]
-        #--------------------------- modified start
-        # post_attention_layernorm = FusedLayerNorm( h, sequence_parallel=True)
-        # hidden_1 = post_attention_layernorm(inputs.data,weight=w_ln.data, bias=b_ln.data )
-        # print(hidden_1)
+        print('len(q_weight_partitions[0] )', len(q_weight_partitions[0]))
+        print('len(q_weight_partitions[0][0] )', len(q_weight_partitions[0][0]))
+        print('len(q_weight_partitions[0][0][0] )', len(q_weight_partitions[0][0][0]))
+        w_q_rank = q_weight_partitions[0]
+        w_q_rank = w_q_rank[:, rank:(rank+1), :]
+        w_q_rank = w_q_rank.squeeze(1)
+        print('the shape of w_q_rank ', w_q_rank.shape)
         
-        # print('return ')
-        # return
+        
+        k_weight_partitions = nn.ParameterList([
+            nn.Parameter(w_k.data.view(h, tensor_parallel_size, h // tensor_parallel_size))
+            
+        ])
+        w_k_rank = k_weight_partitions[0][:, rank:(rank+1), :].squeeze(1)
+        
+        v_weight_partitions = nn.ParameterList([
+            nn.Parameter(w_v.data.view(h, tensor_parallel_size,  h // tensor_parallel_size))
+        ])
+        w_v_rank = v_weight_partitions[0][:, rank:(rank+1), :].squeeze(1)
+        
+        out_weight_partitions = nn.ParameterList([
+            nn.Parameter(w_out.data.view(h,  tensor_parallel_size, h // tensor_parallel_size))
+        ])
+        w_out_rank = out_weight_partitions[0][:, rank:(rank+1), :].squeeze(1)
+        
+        q_bias_partitions = nn.ParameterList([
+            nn.Parameter(b_q.data.view( tensor_parallel_size, h // tensor_parallel_size))
+        ])
+        b_q_rank = q_bias_partitions[0][rank:(rank+1), :].squeeze(0)
+        
+        
+        k_bias_partitions = nn.ParameterList([
+            nn.Parameter(b_k.data.view( tensor_parallel_size, h // tensor_parallel_size))
+        ])
+        # b_k_rank = k_bias_partitions[rank]
+        b_k_rank = k_bias_partitions[0][rank:(rank+1), :].squeeze(0)
+        
+        
+        
+        v_bias_partitions = nn.ParameterList([
+            nn.Parameter(b_v.data.view( tensor_parallel_size, h // tensor_parallel_size))
+            # for _ in range(tensor_parallel_size)
+        ])
+        # b_v_rank = v_bias_partitions[rank]
+        b_v_rank = v_bias_partitions[0][rank:(rank+1), :].squeeze(0)
+        
+        
+        
+        out_bias_partitions = nn.ParameterList([
+            nn.Parameter(b_out.data.view( tensor_parallel_size, h // tensor_parallel_size))
+            # for _ in range(tensor_parallel_size)
+        ])
+        # b_out_rank = out_bias_partitions[rank]
+        b_out_rank = out_bias_partitions[0][rank:(rank+1), :].squeeze(0)
+        
+        
         # hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
         # print('hidden size ', hidden.size())
+        hidden = inputs.data
+        print('hidden shape ', inputs.data.shape)
         # shape: (b, 1, h)
-        q = F.linear(hidden, w_q.data, bias=b_q.data) * scaling
-        k = F.linear(hidden, w_k.data, bias=b_k.data)
-        v = F.linear(hidden, w_v.data, bias=b_v.data)
-        
-        
-        
-        
-        
+        # q = F.linear(hidden, w_q.data, bias=b_q.data) * scaling
+        # k = F.linear(hidden, w_k.data, bias=b_k.data)
+        # v = F.linear(hidden, w_v.data, bias=b_v.data)
+        print('w_q_rank shape ', w_q_rank.shape)
+        print('b_q_rank shape ', b_q_rank.shape)
+        # F.linear(hidden, w_q_rank, bias=b_q_rank)
+        # output = hidden.matmul(w_q_rank.t()) + b_q_rank
+        q = F.linear(hidden, w_q_rank, bias=b_q_rank) * scaling
+        k = F.linear(hidden, w_k_rank, bias=b_k_rank)
+        v = F.linear(hidden, w_v_rank, bias=b_v_rank)
         
         
         # shape: (b, 1, n_head, head_dim)
         q = q.view(b, tgt_s, n_head, head_dim)
         k = k.view(b, tgt_s, n_head, head_dim)
         v = v.view(b, tgt_s, n_head, head_dim)
-
+        print('q ', q.shape)
+        print('k ', k.shape)
+        print('v ', v.shape)
+        print("device of q ", q.device)
+        print("device of k ", k.device)
+        print("device of v ", v.device)
+        import copy
+        rank_device = copy.deepcopy(k.device )
         # shape: (b * n_head, 1, head_dim)
         q = q.permute(0, 2, 1, 3).reshape(b * n_head, tgt_s, head_dim)
         # shape: (1, b * n_head, head_dim)
         k_new = k.permute(1, 0, 2, 3).reshape(tgt_s, b * n_head, head_dim)
         # shape: (1, b * n_head, head_dim)
         v_new = v.permute(1, 0, 2, 3).reshape(tgt_s, b * n_head, head_dim)
-
+        print("device of q  new ", q.device)
+        print("device of k  new", k.device)
+        print("device of v  new", v.device)
+        print("device of k_cache ", k_cache.device)
         if isinstance(k_cache, TorchTensor):
             if attn_sparsity >= 1.0:  # Dense attention
+                print('enter DENSE attention------')
                 if compress_cache:
                     # shape: (s, b * n_head, head_dim)
                     k = k_cache.device.decompress(k_cache)[:src_s]
                     v = v_cache.device.decompress(v_cache)[:src_s]
                 else:
                     # shape: (s, b * n_head, head_dim)
+                    print('we do not compress cache')
                     k = k_cache.data[:src_s]
                     v = v_cache.data[:src_s]
                 k[src_s - 1:src_s] = k_new
@@ -684,16 +728,23 @@ class TorchDevice:
                 k = k.permute(1, 2, 0).reshape(b * n_head, head_dim, src_s)
                 # shape: (b * n_head, s, head_dim)
                 v = v.permute(1, 0, 2).reshape(b * n_head, src_s, head_dim)
-
+                
+                print("device of k cuda ? ", k.device)
+                print("device of v cuda ? ", v.device)
                 if k.is_cuda:
+                    print('k.is_cuda ', k.is_cuda)
                     value = self._attention_value(q, k, v, attention_mask.data,
                         b, src_s, tgt_s, n_head, head_dim)
                 else:
+                    print('k is on cpu ')
                     q = q.float().cpu()
                     k, v = k.float(), v.float()
+                    # value = self._attention_value(q, k, v, attention_mask.data,
+                    #     b, src_s, tgt_s, n_head, head_dim).cuda().half()
                     value = self._attention_value(q, k, v, attention_mask.data,
-                        b, src_s, tgt_s, n_head, head_dim).cuda().half()
+                        b, src_s, tgt_s, n_head, head_dim).to(rank_device).half()
             else:  # Sparse attention
+                print('enter sparse attention------')
                 # shape: (s, b * n_head, head_dim)
                 k = k_cache.data[:src_s]
                 k[src_s - 1:src_s] = k_new
@@ -711,16 +762,38 @@ class TorchDevice:
                         attn_sparsity).cuda().half()
         else:  # Mixed device attention
             assert attn_sparsity >= 1.0
+            print('Mixed device attention')
             value = self._mixed_device_attention(q, k_cache, v_cache,
                 k_new, v_new, attention_mask.data, b, src_s, tgt_s,
                 n_head, head_dim)
-
+        # if q,k,v are on cpu
         # shape: (b, 1, h)
         value = value.transpose(1, 2).view(b, tgt_s, h)
-        value = F.linear(value, w_out.data, bias=b_out.data)
+        # value = F.linear(value, w_out.data, bias=b_out.data)
+        print('device of value ', value.device)
+        print("shape of value ", value.shape)
+        value = F.linear(value, w_out_rank, bias=b_out_rank)
+        print("shape of value after F.linear(value, w_out_rank, bias=b_out_rank)", value.shape)
+        # print('type of value ', type(value))
+        # print(value)# on cuda :0
+        if dist.is_available():
+            print("Distributed package is available!")
+        else:
+            print("Distributed package is not available.")
+        if dist.is_initialized():
+            print(f"Backend: {dist.get_backend()}")
+            print(f"World Size: {dist.get_world_size()}")
+            print(f"Rank: {dist.get_rank()}")
 
+        tensor_list = [torch.zeros(value.shape, dtype=torch.float16) for _ in range(world_size)]
+        dist.all_gather(tensor_list, value)
+        print("tensor_list ", tensor_list)
+        result = torch.cat(tensor_list, dim=1)
+
+        print('inputs.data shape ', inputs.data.shape)
         value.add_(inputs.data) # Add & Norm
-
+        print("shape of value after add_(inputs.data)", value.shape)
+        
         if donate[0]: inputs.delete()
         if donate[1]: attention_mask.delete()
 
@@ -736,12 +809,36 @@ class TorchDevice:
             v_new = TorchTensor.create_from_torch(v_new, self)
         # see_memory_usage('---------================-------------------after mha_gen \n')
         # get_memory('---------================-------------------after mha_gen \n')
+        # ****************************************************
+        # if sequence_parallel:
+        #     world_size = get_tensor_model_parallel_world_size()
+        #     dim_size = list(input.size())
+        #     dim_size[0] = dim_size[0] * world_size
+
+        #     all_gather_buffer = \
+        #         get_global_memory_buffer().get_tensor(dim_size, input.dtype, "mpu")
+        #     torch.distributed._all_gather_base(
+        #         all_gather_buffer,
+        #         input,
+        #         group=get_tensor_model_parallel_group())
+        #     total_input = all_gather_buffer
+        # else:
+        #     total_input = input
+
+        # output = torch.matmul(total_input, weight.t())
+        # if bias is not None:
+        #     output = output + bias
+        # return output
+        
+        
         return TorchTensor.create_from_torch(value, self), k_new, v_new
 
 
     def _attention_weights(self, q, k, mask, b, src_s, n_head):
         # shape: (b * n_head, 1, s)
+        
         attn_weights = torch.bmm(q, k)
+        print('attn_weights device', attn_weights.device)
         # shape: (b, 1, 1, s)
         mask = mask.view(b, 1, 1, src_s)
         # shape: (b * n_head, 1, s)
@@ -752,8 +849,15 @@ class TorchDevice:
         return attn_weights
 
     def _attention_value(self, q, k, v, mask, b, src_s, tgt_s, n_head, head_dim):
+        print('q, k, mask')
+        print(str(q.device)+', '+str(k.device)+', '+str(mask.device))
+        
+        print('src_s ', src_s)
+        print('n_head ', n_head)
+        print('head_dim ', head_dim)
         # shape: (b * n_head, 1, s)
         attn_weights = self._attention_weights(q, k, mask, b, src_s, n_head)
+        print('device of attn_weights ', attn_weights.device)
         # shape: (b, n_head, 1, head_dim)
         return torch.bmm(attn_weights, v).view(b, n_head, tgt_s, head_dim)
 
