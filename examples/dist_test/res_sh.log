@@ -1,12 +1,12 @@
 args.head_ip  127.0.0.1
 Distributed package is available!
-free port  48581
+free port  58797
 Initializing distributed environment world_size=2, rank=0, local_rank=0.
 local rank  0
 --=-=-=-=-==-=-=-====-----------   open mpi rank  0
 args.head_ip  127.0.0.1
 Distributed package is available!
-free port  46609
+free port  34967
 Initializing distributed environment world_size=2, rank=1, local_rank=1.
 local rank  1
 --=-=-=-=-==-=-=-====-----------   open mpi rank  1
@@ -46,16 +46,16 @@ rank #0: split sizes  [768]
 rank #0: split sizes  [768]
 rank #0: split sizes  [768]
 rank #0: split sizes  [768]
-rank #0: init all weights 
-rank #0: ******* OPTLM model init weight
-rank #0: *********-------=-=-=--mid_percent  0.4804097702687206
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((50272, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.embed_tokens.weight')
 rank #1: init all weights 
 rank #1: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.4804097702687206
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((50272, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.embed_tokens.weight')
+rank #0: init all weights 
+rank #0: ******* OPTLM model init weight
+rank #0: *********-------=-=-=--mid_percent  0.4804097702687206
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((50272, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.embed_tokens.weight')
 rank #0: *********-------=-=-=--mid_percent  0.9804097702687206
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((2050, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.embed_positions.weight')
@@ -128,30 +128,30 @@ rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.k_proj.bias')
 rank #0: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
-rank #1: ******* OPTLM model init weight
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.v_proj.weight')
 rank #0: DUMMY weights 
+rank #1: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #1: *********-------=-=-=--mid_percent  0.25
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.v_proj.bias')
 rank #0: DUMMY weights 
-rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: *********-------=-=-=--mid_percent  0.25
 rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn_layer_norm.weight')
+rank #1: home device is  TorchDevice(name=cuda:0)
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.out_proj.weight')
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn_layer_norm.weight')
 rank #0: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.75
 rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.out_proj.bias')
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn_layer_norm.bias')
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.out_proj.bias')
 rank #0: DUMMY weights 
-rank #0: ******* OPTLM model init weight
 rank #1: ******* OPTLM model init weight
+rank #0: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.q_proj.weight')
@@ -160,58 +160,63 @@ rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.q_proj.bias')
 rank #1: DUMMY weights 
-rank #0: ******* OPTLM model init weight
-rank #0: *********-------=-=-=--mid_percent  0.25
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn_layer_norm.weight')
 rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.k_proj.weight')
+rank #1: DUMMY weights 
+rank #0: ******* OPTLM model init weight
+rank #0: *********-------=-=-=--mid_percent  0.25
+rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn_layer_norm.weight')
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.k_proj.bias')
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #1: DUMMY weights 
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn_layer_norm.bias')
+rank #1: *********-------=-=-=--mid_percent  0.6248374512353706
 rank #0: ******* OPTLM model init weight
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.v_proj.weight')
+rank #1: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.12483745123537061
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.q_proj.weight')
 rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
+rank #1: *********-------=-=-=--mid_percent  0.7498374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.k_proj.bias')
 rank #0: *********-------=-=-=--mid_percent  0.2498374512353706
-rank #1: DUMMY weights 
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.v_proj.bias')
 rank #0: home device is  TorchDevice(name=cuda:0)
+rank #1: DUMMY weights 
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.q_proj.bias')
 rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.6248374512353706
+rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #0: *********-------=-=-=--mid_percent  0.3748374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.out_proj.weight')
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.k_proj.weight')
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.v_proj.weight')
-rank #0: DUMMY weights 
 rank #1: DUMMY weights 
+rank #0: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.k_proj.bias')
-rank #0: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #1: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.v_proj.weight')
+rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
 rank #0: DUMMY weights 
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.v_proj.bias')
+rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.out_proj.bias')
+rank #0: home device is  TorchDevice(name=cuda:0)
 rank #1: DUMMY weights 
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.v_proj.weight')
+rank #0: DUMMY weights 
+rank #1: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.v_proj.bias')
 rank #0: DUMMY weights 
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.out_proj.weight')
-rank #1: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.out_proj.weight')
@@ -220,12 +225,7 @@ rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.out_proj.bias')
 rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
 rank #0: ******* OPTLM model init weight
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.0.self_attn.out_proj.bias')
-rank #1: DUMMY weights 
-rank #1: ******* OPTLM model init weight
 rank #0: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: home device is  TorchDevice(name=cuda:0)
@@ -247,46 +247,46 @@ rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn.k_proj.weight')
 rank #0: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
-rank #1: ******* OPTLM model init weight
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn.k_proj.bias')
 rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.25
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn_layer_norm.weight')
 rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn.v_proj.weight')
 rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.75
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn_layer_norm.bias')
-rank #1: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn.v_proj.bias')
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.q_proj.weight')
 rank #0: DUMMY weights 
-rank #1: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn.out_proj.weight')
 rank #0: DUMMY weights 
+rank #1: ******* OPTLM model init weight
+rank #1: *********-------=-=-=--mid_percent  0.25
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn_layer_norm.weight')
+rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn.out_proj.bias')
+rank #1: *********-------=-=-=--mid_percent  0.75
+rank #0: DUMMY weights 
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn_layer_norm.bias')
+rank #0: ******* OPTLM model init weight
+rank #1: ******* OPTLM model init weight
+rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.q_proj.weight')
+rank #1: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.q_proj.bias')
 rank #1: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
 rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn.out_proj.bias')
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #0: DUMMY weights 
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.k_proj.weight')
 rank #1: DUMMY weights 
-rank #0: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.k_proj.bias')
@@ -303,15 +303,15 @@ rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.out_proj.weight')
 rank #1: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.out_proj.bias')
-rank #1: DUMMY weights 
-rank #1: ******* OPTLM model init weight
 rank #0: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.25
+rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.1.self_attn.out_proj.bias')
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn_layer_norm.weight')
+rank #1: DUMMY weights 
+rank #1: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn_layer_norm.bias')
@@ -328,47 +328,47 @@ rank #0: *********-------=-=-=--mid_percent  0.3748374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.k_proj.weight')
 rank #0: DUMMY weights 
-rank #1: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
-rank #1: *********-------=-=-=--mid_percent  0.25
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.k_proj.bias')
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn_layer_norm.weight')
 rank #0: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
-rank #1: *********-------=-=-=--mid_percent  0.75
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.v_proj.weight')
+rank #0: DUMMY weights 
+rank #1: ******* OPTLM model init weight
+rank #1: *********-------=-=-=--mid_percent  0.25
+rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn_layer_norm.weight')
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.v_proj.bias')
+rank #1: *********-------=-=-=--mid_percent  0.75
 rank #0: DUMMY weights 
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn_layer_norm.bias')
-rank #1: ******* OPTLM model init weight
-rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.q_proj.weight')
-rank #1: DUMMY weights 
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.v_proj.bias')
-rank #0: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.out_proj.weight')
+rank #1: ******* OPTLM model init weight
 rank #0: DUMMY weights 
+rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.q_proj.weight')
+rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.out_proj.bias')
 rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
+rank #0: DUMMY weights 
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.q_proj.bias')
 rank #1: DUMMY weights 
+rank #0: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
-rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.k_proj.weight')
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.out_proj.bias')
 rank #1: DUMMY weights 
-rank #0: DUMMY weights 
-rank #0: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.2.self_attn.k_proj.bias')
@@ -411,9 +411,9 @@ rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.k_proj.weight')
 rank #0: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
-rank #1: ******* OPTLM model init weight
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.k_proj.bias')
+rank #1: ******* OPTLM model init weight
 rank #0: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.25
 rank #1: home device is  TorchDevice(name=cuda:0)
@@ -426,32 +426,32 @@ rank #1: *********-------=-=-=--mid_percent  0.75
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn_layer_norm.bias')
 rank #1: ******* OPTLM model init weight
-rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
 rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
-rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.v_proj.bias')
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn.q_proj.weight')
-rank #0: DUMMY weights 
 rank #1: DUMMY weights 
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.v_proj.bias')
+rank #0: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.out_proj.weight')
-rank #0: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
+rank #0: DUMMY weights 
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn.q_proj.bias')
 rank #1: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
 rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.out_proj.bias')
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #0: DUMMY weights 
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn.k_proj.weight')
 rank #1: DUMMY weights 
-rank #0: ******* OPTLM model init weight
+rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.out_proj.bias')
+rank #0: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
+rank #0: ******* OPTLM model init weight
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.3.self_attn.k_proj.bias')
 rank #1: DUMMY weights 
@@ -481,74 +481,74 @@ rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn_layer_norm.bias')
 rank #0: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.12483745123537061
+rank #1: ******* OPTLM model init weight
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.q_proj.weight')
 rank #0: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.2498374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.q_proj.bias')
-rank #0: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.3748374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.k_proj.weight')
-rank #0: DUMMY weights 
-rank #1: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.25
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn_layer_norm.weight')
 rank #1: *********-------=-=-=--mid_percent  0.75
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn_layer_norm.bias')
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.k_proj.bias')
-rank #0: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.2498374512353706
 rank #1: ******* OPTLM model init weight
-rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
-rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
 rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.v_proj.weight')
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.q_proj.bias')
+rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
+rank #0: DUMMY weights 
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.q_proj.weight')
+rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.3748374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.k_proj.weight')
 rank #0: DUMMY weights 
+rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.q_proj.bias')
+rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
+rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.k_proj.weight')
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.k_proj.bias')
+rank #0: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.v_proj.weight')
+rank #1: DUMMY weights 
+rank #0: DUMMY weights 
+rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.k_proj.bias')
 rank #1: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.v_proj.bias')
+rank #1: *********-------=-=-=--mid_percent  0.6248374512353706
 rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.q_proj.bias')
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.v_proj.weight')
 rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.out_proj.weight')
 rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
+rank #1: *********-------=-=-=--mid_percent  0.7498374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.k_proj.weight')
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.v_proj.bias')
+rank #1: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.out_proj.weight')
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.out_proj.bias')
 rank #1: DUMMY weights 
 rank #0: DUMMY weights 
 rank #0: ******* OPTLM model init weight
-rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.k_proj.bias')
-rank #1: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.6248374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.v_proj.weight')
-rank #1: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.v_proj.bias')
-rank #1: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.out_proj.weight')
-rank #1: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.4.self_attn.out_proj.bias')
@@ -556,262 +556,303 @@ rank #1: DUMMY weights
 rank #1: ******* OPTLM model init weight
 rank #0: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.25
+rank #1: ******* OPTLM model init weight
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn_layer_norm.weight')
+rank #1: *********-------=-=-=--mid_percent  0.25
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn_layer_norm.weight')
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn_layer_norm.bias')
+rank #1: *********-------=-=-=--mid_percent  0.75
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn_layer_norm.bias')
 rank #0: ******* OPTLM model init weight
+rank #1: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.12483745123537061
+rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
 rank #0: home device is  TorchDevice(name=cuda:0)
+rank #1: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.q_proj.weight')
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.q_proj.weight')
+rank #1: DUMMY weights 
 rank #0: DUMMY weights 
+rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.q_proj.bias')
 rank #0: *********-------=-=-=--mid_percent  0.2498374512353706
+rank #1: DUMMY weights 
 rank #0: home device is  TorchDevice(name=cuda:0)
+rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.q_proj.bias')
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.k_proj.weight')
 rank #0: DUMMY weights 
+rank #1: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.3748374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.k_proj.weight')
 rank #0: DUMMY weights 
-rank #1: ******* OPTLM model init weight
-rank #1: *********-------=-=-=--mid_percent  0.25
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn_layer_norm.weight')
-rank #1: *********-------=-=-=--mid_percent  0.75
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn_layer_norm.bias')
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.k_proj.bias')
-rank #0: DUMMY weights 
-rank #1: ******* OPTLM model init weight
-rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
-rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.v_proj.weight')
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.q_proj.weight')
-rank #0: DUMMY weights 
-rank #1: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.v_proj.bias')
-rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
-rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.q_proj.bias')
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #1: DUMMY weights 
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.out_proj.weight')
-rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.k_proj.weight')
-rank #1: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.out_proj.bias')
-rank #0: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.k_proj.bias')
-rank #0: ******* OPTLM model init weight
 rank #1: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.6248374512353706
+rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.v_proj.weight')
 rank #1: DUMMY weights 
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.k_proj.bias')
+rank #0: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
 rank #1: *********-------=-=-=--mid_percent  0.7498374512353706
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.v_proj.weight')
 rank #1: home device is  TorchDevice(name=cuda:0)
+rank #0: DUMMY weights 
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.v_proj.bias')
 rank #1: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.out_proj.weight')
 rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.v_proj.bias')
+rank #0: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.5.self_attn.out_proj.bias')
 rank #1: DUMMY weights 
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.out_proj.weight')
+rank #0: DUMMY weights 
 rank #1: ******* OPTLM model init weight
+rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.out_proj.bias')
+rank #0: DUMMY weights 
 rank #0: ******* OPTLM model init weight
-rank #0: *********-------=-=-=--mid_percent  0.25
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn_layer_norm.weight')
-rank #0: *********-------=-=-=--mid_percent  0.75
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn_layer_norm.bias')
-rank #0: ******* OPTLM model init weight
-rank #0: *********-------=-=-=--mid_percent  0.12483745123537061
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.q_proj.weight')
-rank #0: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.2498374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.q_proj.bias')
-rank #0: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.3748374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.k_proj.weight')
-rank #0: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.k_proj.bias')
-rank #0: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.v_proj.weight')
 rank #1: ******* OPTLM model init weight
-rank #0: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.25
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn_layer_norm.weight')
 rank #1: *********-------=-=-=--mid_percent  0.75
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn_layer_norm.bias')
-rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.v_proj.bias')
-rank #0: DUMMY weights 
 rank #1: ******* OPTLM model init weight
-rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
+rank #0: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
-rank #0: home device is  TorchDevice(name=cuda:0)
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.q_proj.weight')
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.out_proj.weight')
-rank #0: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.25
 rank #1: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.out_proj.bias')
-rank #0: DUMMY weights 
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn_layer_norm.weight')
+rank #0: *********-------=-=-=--mid_percent  0.75
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn_layer_norm.bias')
 rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.q_proj.bias')
 rank #0: ******* OPTLM model init weight
 rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.12483745123537061
 rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.k_proj.weight')
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.q_proj.weight')
 rank #1: DUMMY weights 
+rank #0: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.k_proj.bias')
+rank #0: *********-------=-=-=--mid_percent  0.2498374512353706
 rank #1: DUMMY weights 
+rank #0: home device is  TorchDevice(name=cuda:0)
 rank #1: *********-------=-=-=--mid_percent  0.6248374512353706
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.q_proj.bias')
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.v_proj.weight')
+rank #0: DUMMY weights 
 rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.3748374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.k_proj.weight')
+rank #0: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.7498374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.v_proj.bias')
 rank #1: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
+rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.out_proj.weight')
 rank #1: DUMMY weights 
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.k_proj.bias')
+rank #0: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
 rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.v_proj.weight')
 rank #1: home device is  TorchDevice(name=cuda:0)
+rank #0: DUMMY weights 
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.6.self_attn.out_proj.bias')
 rank #1: DUMMY weights 
 rank #1: ******* OPTLM model init weight
+rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.v_proj.bias')
+rank #0: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.out_proj.weight')
+rank #0: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.out_proj.bias')
+rank #0: DUMMY weights 
 rank #0: ******* OPTLM model init weight
-rank #0: *********-------=-=-=--mid_percent  0.25
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn_layer_norm.weight')
-rank #0: *********-------=-=-=--mid_percent  0.75
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn_layer_norm.bias')
-rank #0: ******* OPTLM model init weight
-rank #0: *********-------=-=-=--mid_percent  0.12483745123537061
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.q_proj.weight')
-rank #0: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.2498374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.q_proj.bias')
-rank #0: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.3748374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.k_proj.weight')
-rank #0: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.k_proj.bias')
-rank #0: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.v_proj.weight')
 rank #1: ******* OPTLM model init weight
-rank #0: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.25
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn_layer_norm.weight')
 rank #1: *********-------=-=-=--mid_percent  0.75
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn_layer_norm.bias')
-rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.v_proj.bias')
 rank #1: ******* OPTLM model init weight
-rank #0: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
-rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.out_proj.weight')
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.q_proj.weight')
-rank #0: DUMMY weights 
 rank #1: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.out_proj.bias')
-rank #0: DUMMY weights 
+rank #0: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.q_proj.bias')
-rank #0: ******* OPTLM model init weight
 rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.25
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn_layer_norm.weight')
 rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.k_proj.weight')
 rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.75
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn_layer_norm.bias')
+rank #0: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.k_proj.bias')
 rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.12483745123537061
 rank #1: *********-------=-=-=--mid_percent  0.6248374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.q_proj.weight')
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.v_proj.weight')
+rank #0: DUMMY weights 
 rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.2498374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.q_proj.bias')
 rank #1: *********-------=-=-=--mid_percent  0.7498374512353706
+rank #0: DUMMY weights 
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.v_proj.bias')
 rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.3748374512353706
 rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.k_proj.weight')
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.out_proj.weight')
+rank #0: DUMMY weights 
 rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.k_proj.bias')
 rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #0: DUMMY weights 
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.7.self_attn.out_proj.bias')
 rank #1: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.v_proj.weight')
 rank #1: ******* OPTLM model init weight
+rank #0: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.v_proj.bias')
+rank #0: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.out_proj.weight')
+rank #0: DUMMY weights 
+rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.out_proj.bias')
+rank #0: DUMMY weights 
+rank #0: ******* OPTLM model init weight
+rank #1: ******* OPTLM model init weight
+rank #1: *********-------=-=-=--mid_percent  0.25
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn_layer_norm.weight')
+rank #1: *********-------=-=-=--mid_percent  0.75
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn_layer_norm.bias')
+rank #1: ******* OPTLM model init weight
+rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.q_proj.weight')
+rank #1: DUMMY weights 
+rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.q_proj.bias')
+rank #1: DUMMY weights 
+rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.k_proj.weight')
+rank #1: DUMMY weights 
+rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.k_proj.bias')
+rank #1: DUMMY weights 
+rank #1: *********-------=-=-=--mid_percent  0.6248374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.v_proj.weight')
+rank #1: DUMMY weights 
 rank #0: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn_layer_norm.weight')
+rank #1: *********-------=-=-=--mid_percent  0.7498374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.v_proj.bias')
+rank #1: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn_layer_norm.bias')
+rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.out_proj.weight')
+rank #1: DUMMY weights 
 rank #0: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.12483745123537061
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn.q_proj.weight')
+rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
 rank #0: DUMMY weights 
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.out_proj.bias')
+rank #1: DUMMY weights 
+rank #1: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.2498374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn.q_proj.bias')
@@ -824,73 +865,73 @@ rank #0: *********-------=-=-=--mid_percent  0.4998374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn.k_proj.bias')
 rank #0: DUMMY weights 
-rank #1: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
-rank #1: *********-------=-=-=--mid_percent  0.25
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn.v_proj.weight')
-rank #1: home device is  TorchDevice(name=cuda:0)
 rank #0: DUMMY weights 
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn_layer_norm.weight')
-rank #1: *********-------=-=-=--mid_percent  0.75
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn_layer_norm.bias')
 rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #1: ******* OPTLM model init weight
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn.v_proj.bias')
 rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.q_proj.weight')
 rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
-rank #1: DUMMY weights 
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn.out_proj.weight')
 rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.q_proj.bias')
 rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
-rank #1: DUMMY weights 
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn.out_proj.bias')
 rank #0: DUMMY weights 
+rank #0: ******* OPTLM model init weight
+rank #1: ******* OPTLM model init weight
+rank #1: *********-------=-=-=--mid_percent  0.25
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn_layer_norm.weight')
+rank #1: *********-------=-=-=--mid_percent  0.75
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn_layer_norm.bias')
+rank #1: ******* OPTLM model init weight
+rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.q_proj.weight')
+rank #1: DUMMY weights 
+rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.q_proj.bias')
+rank #1: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.k_proj.weight')
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.k_proj.weight')
 rank #1: DUMMY weights 
-rank #0: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.k_proj.bias')
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.k_proj.bias')
 rank #1: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.6248374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.v_proj.weight')
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.v_proj.weight')
 rank #1: DUMMY weights 
 rank #1: *********-------=-=-=--mid_percent  0.7498374512353706
 rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.v_proj.bias')
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.v_proj.bias')
 rank #1: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.out_proj.weight')
-rank #1: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.8.self_attn.out_proj.bias')
-rank #1: DUMMY weights 
-rank #1: ******* OPTLM model init weight
 rank #0: ******* OPTLM model init weight
+rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #0: *********-------=-=-=--mid_percent  0.25
+rank #1: home device is  TorchDevice(name=cuda:0)
 rank #0: home device is  TorchDevice(name=cuda:0)
+rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.out_proj.weight')
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.11.self_attn_layer_norm.weight')
+rank #1: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.11.self_attn_layer_norm.bias')
+rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #1: home device is  TorchDevice(name=cuda:0)
 rank #0: ******* OPTLM model init weight
+rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.out_proj.bias')
+rank #1: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.12483745123537061
+rank #1: ******* OPTLM model init weight
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.11.self_attn.q_proj.weight')
 rank #0: DUMMY weights 
@@ -909,78 +950,27 @@ rank #0: DUMMY weights
 rank #0: *********-------=-=-=--mid_percent  0.6248374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.11.self_attn.v_proj.weight')
-rank #1: ******* OPTLM model init weight
-rank #1: *********-------=-=-=--mid_percent  0.25
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn_layer_norm.weight')
 rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.75
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn_layer_norm.bias')
-rank #1: ******* OPTLM model init weight
 rank #0: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.11.self_attn.v_proj.bias')
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.q_proj.weight')
 rank #0: DUMMY weights 
-rank #1: DUMMY weights 
 rank #0: *********-------=-=-=--mid_percent  0.8748374512353706
 rank #0: home device is  TorchDevice(name=cuda:0)
 rank #0: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.11.self_attn.out_proj.weight')
 rank #0: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.2498374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.q_proj.bias')
-rank #1: DUMMY weights 
-rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
-rank #1: *********-------=-=-=--mid_percent  0.3748374512353706
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.11.self_attn.out_proj.bias')
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #0: DUMMY weights 
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.k_proj.weight')
-rank #1: DUMMY weights 
-rank #0: ******* OPTLM model init weight
-rank #1: *********-------=-=-=--mid_percent  0.4998374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.k_proj.bias')
-rank #1: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.6248374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.v_proj.weight')
-rank #1: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.7498374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.v_proj.bias')
-rank #1: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.8748374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.out_proj.weight')
-rank #1: DUMMY weights 
-rank #1: *********-------=-=-=--mid_percent  0.9998374512353706
-rank #1: home device is  TorchDevice(name=cuda:0)
-rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.9.self_attn.out_proj.bias')
-rank #1: DUMMY weights 
-rank #1: ******* OPTLM model init weight
-rank #0: ******* OPTLM model init weight
-rank #0: *********-------=-=-=--mid_percent  9.945498667303179e-06
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layer_norm.weight')
-rank #0: *********-------=-=-=--mid_percent  2.9836496001909535e-05
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layer_norm.bias')
-rank #0: *********-------=-=-=--mid_percent  0.5000198909973346
-rank #0: home device is  TorchDevice(name=cuda:0)
-rank #0: weight_specs[i]  ((50272, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.embed_tokens.weight')
 rank #1: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.25
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn_layer_norm.weight')
+rank #0: *********-------=-=-=--mid_percent  0.9998374512353706
+rank #0: home device is  TorchDevice(name=cuda:0)
 rank #1: *********-------=-=-=--mid_percent  0.75
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.11.self_attn.out_proj.bias')
 rank #1: home device is  TorchDevice(name=cuda:0)
+rank #0: DUMMY weights 
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn_layer_norm.bias')
+rank #0: ******* OPTLM model init weight
 rank #1: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.12483745123537061
 rank #1: home device is  TorchDevice(name=cuda:0)
@@ -1015,6 +1005,16 @@ rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layers.10.self_attn.out_proj.bias')
 rank #1: DUMMY weights 
 rank #1: ******* OPTLM model init weight
+rank #0: ******* OPTLM model init weight
+rank #0: *********-------=-=-=--mid_percent  9.945498667303179e-06
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layer_norm.weight')
+rank #0: *********-------=-=-=--mid_percent  2.9836496001909535e-05
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.layer_norm.bias')
+rank #0: *********-------=-=-=--mid_percent  0.5000198909973346
+rank #0: home device is  TorchDevice(name=cuda:0)
+rank #0: weight_specs[i]  ((50272, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.embed_tokens.weight')
 rank #1: ******* OPTLM model init weight
 rank #1: *********-------=-=-=--mid_percent  0.25
 rank #1: home device is  TorchDevice(name=cuda:0)
@@ -1066,8 +1066,8 @@ rank #1: weight_specs[i]  ((768,), <class 'numpy.float16'>, '/home/cc/my_flexgen
 rank #1: *********-------=-=-=--mid_percent  0.5000198909973346
 rank #1: home device is  TorchDevice(name=cuda:0)
 rank #1: weight_specs[i]  ((50272, 768), <class 'numpy.float16'>, '/home/cc/my_flexgen/examples/dist_test/_DUMMY_/opt-125m-np/decoder.embed_tokens.weight')
-rank #0: the time init all weights  6.066379547119141
-rank #0: the model construction time  6.308121681213379
+rank #0: the time init all weights  6.2797112464904785
+rank #0: the model construction time  6.5121564865112305
 rank #0:    model structure 
 rank #0: InputEmbed
 rank #0: layer_norm
@@ -1130,14 +1130,8 @@ rank #0: self.execute_gen_len,  5
 rank #0: gen_len........  32
 rank #0: num_gpu_batches  2
 rank #0: self.hidden shape  32
-rank #0: ============ generate loop normal ============
-rank #0: generation_loop_normal start.........
-rank #0: i: self.execute_gen_len  5
-rank #0: j: self.num_layers  38
-rank #0: k: self.num_gpu_batches  2
-rank #0: generate start -----
-rank #1: the time init all weights  6.060406923294067
-rank #1: the model construction time  6.32317042350769
+rank #1: the time init all weights  6.301990747451782
+rank #1: the model construction time  6.554242849349976
 rank #1:    model structure 
 rank #1: InputEmbed
 rank #1: layer_norm
@@ -1174,18 +1168,24 @@ rank #1: prefill  None
 rank #1: MLP
 rank #1: layer_norm
 rank #1: SelfAttention
+rank #0: ============ generate loop normal ============
 rank #1: prefill  None
 rank #1: MLP
 rank #1: layer_norm
 rank #1: SelfAttention
+rank #0: generation_loop_normal start.........
 rank #1: prefill  None
 rank #1: MLP
 rank #1: layer_norm
 rank #1: SelfAttention
+rank #0: i: self.execute_gen_len  5
+rank #0: j: self.num_layers  38
 rank #1: prefill  None
 rank #1: MLP
 rank #1: layer_norm
 rank #1: SelfAttention
+rank #0: k: self.num_gpu_batches  2
+rank #0: generate start -----
 rank #1: prefill  None
 rank #1: MLP
 rank #1: OutputEmbed
@@ -1945,13 +1945,55 @@ rank #0: world_size_mha_gen_TP 2
 rank #0: tensor_parallel_size  2
 rank #0: w_q.data.shape  torch.Size([768, 768])
 rank #0: w_q.data.view(h, tensor_parallel_size, h // tensor_parallel_size)  torch.Size([768, 2, 384])
-rank #0: len(q_weight_partitions[0] ) 768
-rank #0: len(q_weight_partitions[0][0] ) 2
-rank #0: len(q_weight_partitions[0][0][0] ) 384
-rank #0: the shape of w_q_rank  torch.Size([768, 384])
+rank #0: len(q_weight_partitions[0] ) 2
+rank #0: len(q_weight_partitions[0][0] ) 384
+rank #0: len(q_weight_partitions[0][0][0] ) 768
+rank #0: the shape of w_q_rank  torch.Size([384, 768])
+rank #0: shape of b_q_rank  torch.Size([384])
 rank #0: hidden shape  torch.Size([4, 1, 768])
-rank #0: w_q_rank shape  torch.Size([768, 384])
+rank #0: w_q_rank shape  torch.Size([384, 768])
 rank #0: b_q_rank shape  torch.Size([384])
+rank #0: q shape after F.linear  torch.Size([4, 1, 384])
+rank #0: k shape after F.linear  torch.Size([4, 1, 384])
+rank #0: v shape after F.linear  torch.Size([4, 1, 384])
+rank #0: q  torch.Size([4, 1, 12, 32])
+rank #0: k  torch.Size([4, 1, 12, 32])
+rank #0: v  torch.Size([4, 1, 12, 32])
+rank #0: device of q  cuda:0
+rank #0: device of k  cuda:0
+rank #0: device of v  cuda:0
+rank #0: device of q  new  cuda:0
+rank #0: device of k  new cuda:0
+rank #0: device of v  new cuda:0
+rank #0: device of k_cache  TorchDevice(name=cpu)
+rank #0: enter DENSE attention------
+rank #0: we do not compress cache
+rank #0: q  torch.Size([48, 1, 32])
+rank #0: k_new  torch.Size([1, 48, 32])
+rank #0: v_new  torch.Size([1, 48, 32])
+rank #0: src_s  257
+rank #0: k_cache.data[:src_s]  torch.Size([257, 48, 32])
+rank #0: v_cache.data[:src_s]  torch.Size([257, 48, 64])
+rank #0: rank*head_dim_per_partition  0
+rank #0: (rank+1)*head_dim_per_partition  32
+rank #0: v_cache.data[:src_s]  torch.Size([257, 48, 32])
+rank #0: k shape  torch.Size([48, 32, 257])
+rank #0: v shape  torch.Size([48, 257, 32])
+rank #0: device of k cuda ?  cpu
+rank #0: device of v cuda ?  cpu
+rank #0: k is on cpu 
+rank #0: q, k, mask
+rank #0: cpu, cpu, cpu
+rank #0: src_s  257
+rank #0: n_head  12
+rank #0: head_dim  32
+rank #0: attn_weights device cpu
+rank #0: _attention_weights shape  torch.Size([48, 1, 257])
+rank #0: device of attn_weights  cpu
+rank #0: attn_weights shape ,  torch.Size([48, 1, 257])
+rank #0: shape of value  torch.Size([4, 12, 1, 32])
+rank #0: tgt_s  1
+rank #0: w_out_rank.shape  torch.Size([384, 768])
 -------------------------------------------------------
 Primary job  terminated normally, but 1 process returned
 a non-zero exit code.. Per user-direction, the job has been aborted.
@@ -2330,6 +2372,6 @@ rank #1: self attention prefill--------
 mpirun detected that one or more processes exited with non-zero status, thus causing
 the job to be terminated. The first process to do so was:
 
-  Process name: [[50449,1],0]
+  Process name: [[9509,1],0]
   Exit code:    1
 --------------------------------------------------------------------------
