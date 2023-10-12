@@ -161,7 +161,7 @@ def initialize_distributed(args):
     """Initialize torch.distributed."""
     # Get local rank in case it is provided.
     device_count = torch.cuda.device_count()
-    # print('device_count ', device_count)
+    print('device_count ', device_count)
     
     global _COMM_DEVICE
     comm_device =args.comm_device
@@ -173,7 +173,7 @@ def initialize_distributed(args):
     else:
         raise ValueError(f'Unknown comm_device: {comm_device}')
     local_rank = args.local_rank
-
+    
     # Get rank and world size.
     # rank = int(os.getenv('RANK', '0'))
     rank = args.rank
@@ -188,6 +188,7 @@ def initialize_distributed(args):
     if local_rank is not None:
         device = local_rank
     torch.cuda.set_device(device)
+    print('torch.cuda.set_device(device) cuda device', device)
 
     # Call the init process.
     init_method = 'tcp://'
