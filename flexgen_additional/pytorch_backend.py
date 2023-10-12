@@ -793,47 +793,46 @@ class TorchDevice:
         # value = value.transpose(1, 2).view(b, tgt_s, h)
 
         value = value.transpose(1, 2).view(b, tgt_s, h // tensor_parallel_size)
-        output_parallel = torch.matmul(value, w_out_rank.t())
+        print('value ', value)
+        print('value.shape ', value.shape)
+        print('w_out_rank.t() ', w_out_rank.t())
+        print('w_out_rank.t().shape ', w_out_rank.t().shape)
+        # value = value.to(torch.float32)  # Convert 'value' to float32
+        # w_out_rank = w_out_rank.to(torch.float32)  # Convert 'w_out_rank' to float32
+
+        output_parallel = torch.matmul(value, w_out_rank.t()).cuda(rank)
         print('type of output_parallel ', output_parallel.type())
         # output_parallel = F.linear(value, w_out_rank, bias=None).cuda(rank)
         print('current rank ', rank)
         print('shape of output_parallel ', output_parallel.shape )
-        print(output_parallel[0][0][:8])
-        # export NCCL_SOCKET_IFNAME=eth0 
-        # export NCCL_P2P_DISABLE=0
-        cuda_stream = torch.cuda.Stream()
+        print('output_parallel [0][0][:8] ',output_parallel[0][0][:8])
+        # # export NCCL_SOCKET_IFNAME=eth0 
+        # # export NCCL_P2P_DISABLE=0
+        # cuda_stream = torch.cuda.Stream()
 
-        # Record the number of active CUDA streams
-        num_active_streams = torch.cuda.current_stream().cuda_stream
+        # # Record the number of active CUDA streams
+        # num_active_streams = torch.cuda.current_stream().cuda_stream
 
-        # Log the information
-        print(f"Number of active CUDA streams: {num_active_streams}")
+        # # Log the information
+        # print(f"Number of active CUDA streams: {num_active_streams}")
         
         # value = torch.distributed.all_reduce(output_parallel, group=get_tensor_model_parallel_group())
         # value = torch.distributed.all_reduce(output_parallel,op=dist.ReduceOp.SUM)
-        value = torch.distributed.all_reduce(output_parallel)
-        
-        print('value ', value)
-        print('device of value ', value.device)
-        print("shape of value ", value.shape)
-        value = value + b_out.data
-        print("shape of value after all reduce)", value.shape)
-        # print('type of value ', type(value))
-        # print(value)# on cuda :0
-        # if dist.is_available():
-        #     print("Distributed package is available!")
-        # else:
-        #     print("Distributed package is not available.")
-        # if dist.is_initialized():
-        #     print(f"Backend: {dist.get_backend()}")
-        #     print(f"World Size: {dist.get_world_size()}")
-        #     print(f"Rank: {dist.get_rank()}")
+        torch.distributed.all_reduce(output_parallel, group=get_tensor_model_parallel_group())
 
-        tensor_list = [torch.zeros(value.shape, dtype=torch.float16) for _ in range(world_size)]
+        print('output_parallel ', output_parallel)
+        print('device of output_parallel ', output_parallel.device)
+        print("shape of output_parallel ", output_parallel.shape)
+        value = output_parallel + b_out.data.cuda(rank)
+        print("shape of value after all reduce)", value.shape)
+        
+
+        tensor_list = [torch.zeros(value.shape, dtype=torch.float16).cuda(rank) for _ in range(world_size)]
         dist.all_gather(tensor_list, value)
         print("tensor_list ", tensor_list)
-        result = torch.cat(tensor_list, dim=1)
-
+        print("tensor_list[0].shape ", tensor_list[0].shape)
+        # result = torch.cat(value, dim=1)
+        value = 
         print('inputs.data shape ', inputs.data.shape)
         value.add_(inputs.data) # Add & Norm
         print("shape of value after add_(inputs.data)", value.shape)
