@@ -20,7 +20,7 @@ sys.path.insert(0,'../../flexgen_additional/')
 # sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/flexgen_additional')
 # from dist_utils import initialize_distributed
 from dist_utils import initialize_distributed_TP
-from dist_utils import initialize_distributed_test
+from dist_utils import initialize_distributed, get_tensor_model_parallel_group
 
 from compression import CompressionConfig
 from opt_config import OptConfig, get_opt_config, download_opt_weights
@@ -262,7 +262,7 @@ if __name__ == "__main__":
     add_parser_arguments(parser)
     add_distributed_parser_arguments(parser)
     args = parser.parse_args()
-
+    
 
     if args.head_ip is not None and args.port is not None:
         print('args.head_ip ', args.head_ip)
@@ -281,18 +281,23 @@ if __name__ == "__main__":
                 print("Distributed package is available!")
             else:
                 print("Distributed package is not available.")
+            initialize_distributed(args=args)
+            print('group, ', get_tensor_model_parallel_group)
             if dist.is_initialized():
                 print(f"Backend: {dist.get_backend()}")
                 print(f"World Size: {dist.get_world_size()}")
                 print(f"Rank: {dist.get_rank()}")
-        initialize_distributed_TP(args.head_ip, args.port, args.world_size, args.rank, args.local_rank, args.comm_device)
-    else:
-        print('not init distributed')
-        initialize_distributed_test(args=args)
+                
+            else:
+                print('Error: dist is not initialized()')
+    #     initialize_distributed_TP(args.head_ip, args.port, args.world_size, args.rank, args.local_rank, args.comm_device)
+    # else:
+    #     print('not init distributed')
+    #     initialize_distributed(args=args)
         
-        args.world_size = 1
-        args.rank = 0
-        args.local_rank = 0
+    #     args.world_size = 1
+    #     args.rank = 0
+    #     args.local_rank = 0
 
 
     assert len(args.percent) == 6

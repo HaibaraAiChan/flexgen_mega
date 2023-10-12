@@ -19,10 +19,10 @@ sys.path.insert(0,'.')
 import sys
 sys.path.insert(0,'..')
 # sys.path.insert(0,'../flexgen_additional/')
-sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/flexgen_additional')
+sys.path.insert(0,'/home/cc/my_flexgen/flexgen_additional')
 # from memory_usage import see_memory_usage
 # from cpu_mem_usage import get_memory
-
+from dist_utils import get_tensor_model_parallel_group
 from flexgen_utils import (GB, T, cpu_mem_stats, vector_gather,
     np_dtype_to_torch_dtype, torch_dtype_to_np_dtype,
     torch_dtype_to_num_bytes)
@@ -34,6 +34,7 @@ import torch.distributed as dist
 general_copy_compressed = TorchCompressedDevice = None
 global_cpu_device = None
 global_disk_device = None
+
 
 
 def fix_recursive_import():
@@ -638,7 +639,7 @@ class TorchDevice:
         
         
         out_weight_partitions = nn.ParameterList([
-            nn.Parameter(w_out.data.view(tensor_parallel_size, h // tensor_parallel_size, h))
+            nn.Parameter(w_out.data.view(tensor_parallel_size,  h, h // tensor_parallel_size))
         ])
         w_out_rank = out_weight_partitions[0][rank:(rank+1), :, :].squeeze(0)
         
@@ -665,10 +666,10 @@ class TorchDevice:
         
         
         
-        out_bias_partitions = nn.ParameterList([
-            nn.Parameter(b_out.data.view( tensor_parallel_size, h // tensor_parallel_size))
-        ])
-        b_out_rank = out_bias_partitions[0][rank:(rank+1), :].squeeze(0)
+        # out_bias_partitions = nn.ParameterList([
+        #     nn.Parameter(b_out.data.view( tensor_parallel_size, h // tensor_parallel_size))
+        # ])
+        # b_out_rank = out_bias_partitions[0][rank:(rank+1), :].squeeze(0)
         
         
         # hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
@@ -789,23 +790,44 @@ class TorchDevice:
         print('shape of value ', value.shape)
         print('tgt_s ', tgt_s)
         print('w_out_rank.shape ', w_out_rank.shape)
-        value = value.transpose(1, 2).view(b, tgt_s, h)
-        # value = F.linear(value, w_out.data, bias=b_out.data)
+        # value = value.transpose(1, 2).view(b, tgt_s, h)
+
+        value = value.transpose(1, 2).view(b, tgt_s, h // tensor_parallel_size)
+        output_parallel = torch.matmul(value, w_out_rank.t())
+        print('type of output_parallel ', output_parallel.type())
+        # output_parallel = F.linear(value, w_out_rank, bias=None).cuda(rank)
+        print('current rank ', rank)
+        print('shape of output_parallel ', output_parallel.shape )
+        print(output_parallel[0][0][:8])
+        # export NCCL_SOCKET_IFNAME=eth0 
+        # export NCCL_P2P_DISABLE=0
+        cuda_stream = torch.cuda.Stream()
+
+        # Record the number of active CUDA streams
+        num_active_streams = torch.cuda.current_stream().cuda_stream
+
+        # Log the information
+        print(f"Number of active CUDA streams: {num_active_streams}")
         
+        # value = torch.distributed.all_reduce(output_parallel, group=get_tensor_model_parallel_group())
+        # value = torch.distributed.all_reduce(output_parallel,op=dist.ReduceOp.SUM)
+        value = torch.distributed.all_reduce(output_parallel)
+        
+        print('value ', value)
         print('device of value ', value.device)
         print("shape of value ", value.shape)
-        value = F.linear(value, w_out_rank, bias=b_out_rank)
-        print("shape of value after F.linear(value, w_out_rank, bias=b_out_rank)", value.shape)
+        value = value + b_out.data
+        print("shape of value after all reduce)", value.shape)
         # print('type of value ', type(value))
         # print(value)# on cuda :0
-        if dist.is_available():
-            print("Distributed package is available!")
-        else:
-            print("Distributed package is not available.")
-        if dist.is_initialized():
-            print(f"Backend: {dist.get_backend()}")
-            print(f"World Size: {dist.get_world_size()}")
-            print(f"Rank: {dist.get_rank()}")
+        # if dist.is_available():
+        #     print("Distributed package is available!")
+        # else:
+        #     print("Distributed package is not available.")
+        # if dist.is_initialized():
+        #     print(f"Backend: {dist.get_backend()}")
+        #     print(f"World Size: {dist.get_world_size()}")
+        #     print(f"Rank: {dist.get_rank()}")
 
         tensor_list = [torch.zeros(value.shape, dtype=torch.float16) for _ in range(world_size)]
         dist.all_gather(tensor_list, value)
