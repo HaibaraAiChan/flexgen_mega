@@ -16,7 +16,7 @@ import torch
 from transformers import AutoTokenizer
 import sys
 sys.path.insert(0,'..')
-sys.path.insert(0,'../flexgen_additional/')
+sys.path.insert(0,'../../flexgen_additional/')
 # sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/flexgen_additional')
 
 from compression import CompressionConfig
@@ -29,7 +29,7 @@ from flexgen_utils import (Task, ExecutionEnv, GB, T, ValueHolder,
     torch_mem_stats, torch_dtype_to_np_dtype, write_benchmark_log,
     read_benchmark_log)
 # sys.path.insert(0,'../model')
-sys.path.insert(0,'/home/cc/FlexGen/new_flexgen/model')
+sys.path.insert(0,'/home/cc/my_flexgen/model')
 from self_attention_layer import SelfAttention
 from MLP_layer import MLP
 from transformer_layer import TransformerLayer

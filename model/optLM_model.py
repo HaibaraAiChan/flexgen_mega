@@ -296,17 +296,7 @@ class OptLM:
             self.cache_write_buf[j][k], i, k)
         print('------------------------layer name ',self.layers[j].name )
         print('hidden ', self.hidden[i][j][k].val)
-        # print('cache_read_buf ', self.cache_read_buf[j][k].val)
-        # print('weight_read_buf ', self.weight_read_buf[j].val)
-        # print('attention_mask ', self.attention_mask[k].val)
-        # print('cache_write_buf ', self.cache_write_buf[j][k].val)
-        
-        # if self.cache_write_buf[j][k].val :
-        #     print('cache_write_buf '+ str(self.cache_write_buf[j][k].val[0].data.size()) + ', ' + str(self.cache_write_buf[j][k].val[1].data.size()))
-            
-        # else:
-        #     print('cache_write_buf ', self.cache_write_buf[j][k].val)
-        # print()
+       
 
     def sync(self):
         self.env.disk.synchronize()

@@ -211,7 +211,7 @@ class SelfAttention:
         return (batch_size, seq_len, self.config.input_dim), self.config.dtype
 
     def forward(self, hidden, cache_read_buf, weight_read_buf, attention_mask,
-                cache_write_buf, i, k, split_idx):
+                cache_write_buf, i, k):
         n_head = self.config.n_head
         print('------------------************   number of head', n_head)
 
@@ -233,7 +233,7 @@ class SelfAttention:
             mask, donate[1] = attention_mask.val.smart_copy(self.compute)
             
             h, new_k_cache, new_v_cache = self.compute.mha(h, mask, w_q, b_q,
-                w_k, b_k, w_v, b_v, w_out, b_out,  n_head, donate,
+                w_k, b_k, w_v, b_v, w_out, b_out, w_ln, b_ln, n_head, donate,
                 self.policy.compress_cache, self.policy.comp_cache_config)
             
             cache_write_buf.store((new_k_cache, new_v_cache))
