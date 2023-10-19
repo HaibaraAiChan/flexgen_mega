@@ -53,6 +53,7 @@ class SelfAttention:
         self.task = task
 
     def init_weight(self, weight_home, path):
+        print('path ', path)
         h, dtype = (self.config.input_dim, self.config.dtype)
         path = os.path.join(os.path.join(path, f"decoder.layers.{self.layer_id}.self_attn"))
         weight_specs = [

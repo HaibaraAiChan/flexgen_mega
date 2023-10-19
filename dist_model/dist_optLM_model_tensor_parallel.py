@@ -142,13 +142,16 @@ class OptLM_TP:
     def init_weight(self, j):
         expanded_path = os.path.abspath(os.path.expanduser(
             os.path.join(self.path, f"{self.config.name}-np")))
+        print("expanded_path ", expanded_path)
         check_path = os.path.join(expanded_path, "decoder.embed_positions.weight")
+        print('check_path ', check_path)
         print('******* OPTLM model init weight')
         if not os.path.exists(check_path) and DUMMY_WEIGHT not in check_path:
             print(' download opt weights from hugging face---------')
             download_opt_weights(self.config.name, self.path)
 
         self.layers[j].init_weight(self.weight_home[j], expanded_path)
+        print('layer ' + str(j)+' init_weight done')
 
     def load_weight(self, i, j, k, overlap=True):
         # Handle corner cases
@@ -163,6 +166,7 @@ class OptLM_TP:
             with torch.cuda.stream(self.load_weight_stream):
                 self.layers[j].load_weight(self.weight_home[j], self.weight_read_buf[j], k)
         else:
+            print('load_weight layer '+ str(j))
             self.layers[j].load_weight(self.weight_home[j], self.weight_read_buf[j], k)
 
     def delete_weight(self, j, k):

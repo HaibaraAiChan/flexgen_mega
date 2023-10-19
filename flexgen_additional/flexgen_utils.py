@@ -13,7 +13,7 @@ import torch
 from flexgen.compression import CompressionConfig
 
 import torch.distributed as dist
-
+# from pytorch_backend import tensor_parallel_part
 # dist.init_process_group(backend='gloo')
 # dist.init_process_group(backend='nccl')
 # world_size = dist.get_world_size()
@@ -459,21 +459,32 @@ def init_weight_list_tensor_parallel(weight_specs, policy, env):
 
         if not compress:
             weight = home.allocate(shape, dtype, pin_memory=pin_memory)
-
+            print('not compress,  weight shape ', weight.shape)
             if DUMMY_WEIGHT not in filename:
-                weight.load_from_np_file(weight_specs[i][2])
-                print('load_from_np_file,  weight shape ', weight.shape)
-                # dist.init_process_group(backend='nccl')
                 world_size = dist.get_world_size()
                 world_rank = dist.get_rank()
+                print ('world_size ', world_size )
+                print ('world_rank ', world_rank )
+                print('weight_specs[i][2] ', weight_specs[i][2])
+                weight.load_from_np_file(weight_specs[i][2])
+                # weight.load_from_np_file_TP(weight_specs[i][2])
+                print('load_from_np_file,  weight shape ', weight.shape)
+                # dist.init_process_group(backend='nccl')
+                # from pytorch_backend import tensor_parallel_part
+                # weight = tensor_parallel_part(weight.data, weight.device,world_size,world_rank )
+                # output_size = int(weight.shape[-1])
+                # print('output_size ', output_size)
+                # output_size_per_partition = output_size // world_size
+                # print('weight.data.shape ', weight.data.shape)
+                # print('weight.data', weight.data)
+                # print('output_size_per_partition ', output_size_per_partition)
+                # weight_list = torch.split(weight.data, output_size_per_partition, dim=-1)
+                # print('weight_list ', weight_list)
+                # print('weight_list[0].shape , ', weight_list[0].shape)
+                # weight = weight_list[world_rank]
+                print('weight.shape, ', weight.shape)
                 
                 
-                output_size_per_partition = divide(output_size, world_size)
-
-                weight_list = torch.split(weight, output_size_per_partition, dim=1)
-                
-                
-                my_weight_list = weight_list[rank::world_size]
             else:
                 print('DUMMY weights ')
                 weight.load_from_np(np.ones(shape, dtype))
@@ -490,8 +501,5 @@ def init_weight_list_tensor_parallel(weight_specs, policy, env):
                     x.load_from_np(np.ones(x.shape, torch_dtype_to_np_dtype[x.dtype]))
 
         ret.append(weight)
-        # print('ret ', ret)
-        # print('ret[0] ', ret[0].shape)
-        # if len(ret)>1:
-        #     print('ret[1] ', ret[1].shape)
+        print('len(ret )', len(ret))
     return ret

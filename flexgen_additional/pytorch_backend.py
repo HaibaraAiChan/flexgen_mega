@@ -116,7 +116,24 @@ class TorchTensor:
         print('cls data.device ',data.device )
         print('cls device ', device)
         return cls(data.shape, data.dtype, data, device, name=name)
-
+    
+    def tensor_parallel_part(self, data, device, world_size, world_rank):
+        output_size = int(data.shape[-1])
+        print('output_size ', output_size)
+        output_size_per_partition = output_size // world_size
+        print('data.shape ', data.shape)
+        print('data', data)
+        print('output_size_per_partition ', output_size_per_partition)
+        data_list = torch.split(data, output_size_per_partition, dim=-1)
+        print('data_list ', data_list)
+        print('data_list[0].shape , ', data_list[0].shape)
+        data = data_list[world_rank]
+        print('data.shape, ', data.shape)
+        
+        return cls(data.shape, data.dtype, data, device, name=name)
+        
+    
+    
     def delete(self):
         assert self.device is not None, "already deleted"
         if self.device.device_type == DeviceType.DISK:
@@ -134,12 +151,39 @@ class TorchTensor:
                 general_copy(self, None, tmp, None)
             else:
                 self.data.copy_(torch.from_numpy(np_array))
+                
+    def load_from_np_TP(self, np_array):
+        if self.device.device_type == DeviceType.DISK:
+            with open(self.data, "wb") as fout:
+                np.save(fout, np_array)
+        else:
+            if self.device.device_type == DeviceType.COMPRESSED:
+                tmp = torch.from_numpy(np_array)
+                tmp = global_cpu_device.compressed_device.compress(tmp, self.data[2])
+                general_copy(self, None, tmp, None)
+            else:
+                world_size = dist.get_world_size()
+                world_rank = dist.get_rank()
+                print ('world_size ', world_size )
+                print ('world_rank ', world_rank )
+                print("shape of np_array ", np_array.shape)
+                columns = np.hsplit(np_array, world_size)
+                print('columns ', columns)
+                np_array = columns[world_rank]
+                print("shape of np_array ", np_array.shape)
+                self.data.copy_(torch.from_numpy(np_array))
 
     def load_from_np_file(self, filename):
         if self.device.device_type == DeviceType.DISK:
             shutil.copy(filename, self.data)
         else:
             self.load_from_np(np.load(filename))
+
+    def load_from_np_file_TP(self, filename):
+        if self.device.device_type == DeviceType.DISK:
+            shutil.copy(filename, self.data)
+        else:
+            self.load_from_np_TP(np.load(filename))
 
     def copy(self, dst, src_indices=None):
         if src_indices:
@@ -719,6 +763,7 @@ class TorchDevice:
         print("device of q  new ", q.device)
         print("device of k  new", k.device)
         print('type of k new ', k_new[0])
+        print('k_new ', k_new)
         print("device of v  new", v.device)
         print("shape of v  new", v.shape)
         print("device of k_cache ", k_cache.device)
@@ -842,16 +887,16 @@ class TorchDevice:
 
         k_new_tensor_list = [torch.zeros(k_new.shape, dtype=torch.float16).cuda(rank) for _ in range(world_size)]
         dist.all_gather(k_new_tensor_list, k_new.to_dense().cuda(rank).contiguous())
+        k_new = torch.cat(k_new_tensor_list, dim=2).cuda(0)
         print("k_new_tensor_list ", k_new_tensor_list)
         print("k_new_tensor_list[0].shape ", k_new_tensor_list[0].shape)
         print("k_new_tensor_list[1].shape ", k_new_tensor_list[1].shape)
         
         
-        k_new = torch.cat(k_new_tensor_list, dim=2).cuda(0)
+        
         print("k_new.shape ", k_new.shape)
         v_new_tensor_list = [torch.zeros(v_new.shape, dtype=torch.float16).cuda(rank) for _ in range(world_size)]
         dist.all_gather(v_new_tensor_list, v_new.to_dense().cuda(rank).contiguous())
-        
         v_new = torch.cat(v_new_tensor_list, dim=2).cuda(0)
         print("k_new.shape torch.cat(k_new_tensor_list, dim=2) ", k_new.shape)
         print("v_new.shape torch.cat(v_new_tensor_list, dim=2)", v_new.shape)

@@ -79,7 +79,7 @@ def run_flexgen(args):
     if args.model == "facebook/galactica-30b":
         tokenizer = AutoTokenizer.from_pretrained("facebook/galactica-30b", padding_side="left")
     else:
-        tokenizer = AutoTokenizer.from_pretrained("facebook/opt-30b", padding_side="left")
+        tokenizer = AutoTokenizer.from_pretrained("facebook/opt-125m", padding_side="left")
     num_prompts = args.num_gpu_batches * args.gpu_batch_size
     prompt_len, gen_len, cut_gen_len = args.prompt_len, args.gen_len, args.cut_gen_len
 
@@ -117,6 +117,7 @@ def run_flexgen(args):
     print('start create model ')
     time_m = time.time()
     print('args.rank', args.rank)
+    print('before OptLM_TP args.path', args.path)
     model = OptLM_TP(opt_config, env, args.path, policy, args.local_rank)
     print('the model construction time ', time.time()-time_m)
     print('   model structure ')
@@ -136,6 +137,7 @@ def run_flexgen(args):
         print("benchmark - generate")
         timers("generate").reset()
         print('args.gen_len ', args.gen_len)
+        print('args.path ', args.path)
         print('input ', torch.tensor(inputs).size())
         time1 = time.time()
         output_ids = model.generate(
@@ -160,7 +162,7 @@ def run_flexgen(args):
     total_throughput = num_generated_tokens / total_latency
     _, gpu_peak_mem = gpu.mem_stats()
     _, cpu_peak_mem = cpu.mem_stats()
-
+    print('run_flexgen args.path ', args.path)
     if DUMMY_WEIGHT not in args.path:
         outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
         show_str = "Outputs:\n" + 70 * '-' + "\n"
@@ -262,7 +264,8 @@ if __name__ == "__main__":
     add_parser_arguments(parser)
     add_distributed_parser_arguments(parser)
     args = parser.parse_args()
-    
+    args.path = '~/opt_weights'
+    print('args.path ', args.path)
 
     if args.head_ip is not None and args.port is not None:
         print('args.head_ip ', args.head_ip)

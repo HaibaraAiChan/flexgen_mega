@@ -55,6 +55,7 @@ class SelfAttention:
 
     def init_weight(self, weight_home, path):
         h, dtype = (self.config.input_dim, self.config.dtype)
+        print('init_weight path ', path)
         path = os.path.join(os.path.join(path, f"decoder.layers.{self.layer_id}.self_attn"))
         weight_specs = [
             # w_q
@@ -78,33 +79,22 @@ class SelfAttention:
             # # b_ln
             # ((h,), dtype, path + "_layer_norm.bias"),
         ]
-        # local_rank = int(os.environ.get("LOCAL_RANK"))
-        # # rank = torch.distributed.get_rank()
-        # print('self attention layer local rank , ', local_rank)
-        # if torch.distributed.get_rank() == 0:
-        #     print('> testing initialize_model_parallel with size {} ...'.format(20))
-        # if torch.distributed.get_rank() == 1:
-        #     print('> testing initialize_model_parallel with size {} ...'.format(40))
+        print('init weight: weight_specs ', weight_specs)
         weights = init_weight_list_tensor_parallel(weight_specs, self.policy, self.env)
-        # import sys
-        # size_in_bytes = sys.getsizeof(weight_home)
-        # print(f"Size of self.weight_home: {size_in_bytes} bytes")
-        
-        # # get_memory('-------------------before weight_home.store(weights) ')
-        # print('weights length ',len(weights) )
-        # print('weights[0] shape ',weights[0].shape )
-        # if len(weights)>1:
-        #     print('weights[1] shape ',weights[1].shape )
         weight_home.store(weights)
-        # print('weight_home ', weight_home)
-        # get_memory('-----------------------------after weight_home.store(weights) ')
-        # weight_home.store(weights)
-
+        
+        
+       
     def load_weight(self, weight_home, weight_read_buf, k):
+        print('weight_home ', weight_home)
+        print('weight_read_buf ', weight_read_buf)
+        print('k ', k)
         w_q, b_q, w_k, b_k, w_v, b_v, w_out, b_out = weight_home.val
         if k == 0:
             dst1 = self.weight_load_dst
             dst2 = self.compute
+            print('dst1 ', dst1)
+            print('dst2 ', dst2)
             weight_read_buf.store((
                 w_q.smart_copy(dst1), b_q.smart_copy(dst2),
                 w_k.smart_copy(dst1), b_k.smart_copy(dst2),
@@ -234,6 +224,7 @@ class SelfAttention:
             print(' weight_read_buf if it is not not last gpu batch... ')
             ((w_q, _), (b_q, _), (w_k, _), (b_k, _),
              (w_v, _), (b_v, _), (w_out, _), (b_out, _)) = weight_read_buf.val
+            print('w_q.data ', w_q.data)
 
         if i == 0:  # prefill
             print('self attention prefill--------')

@@ -215,7 +215,7 @@ class SelfAttention:
         else:
             ((w_q, _), (b_q, _), (w_k, _), (b_k, _),
              (w_v, _), (b_v, _), (w_out, _), (b_out, _)) = weight_read_buf.val
-
+            print('w_q  read weight_read_buf.val: ', w_q)
         if i == 0:  # prefill
             print('self attention prefill--------')
             self.prefill = True
