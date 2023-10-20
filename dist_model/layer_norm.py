@@ -1,8 +1,9 @@
 import os
 import sys
-sys.path.insert(0,'/home/cc/new_flexgen/flexgen_additional')
+sys.path.insert(0,'/home/cc/my_flexgen/flexgen_additional')
 from flexgen_utils import init_weight_list
 from pytorch_backend import TorchTensor,TorchDevice, TorchDisk, TorchLink,TorchMixedDevice, DeviceType, general_copy, fix_recursive_import
+
 #### not finished the modification yet
 
 class Layer_norm:
@@ -32,6 +33,7 @@ class Layer_norm:
         ]
         weights = init_weight_list(weight_specs, self.policy, self.env)
         weight_home.store(weights)
+        
     def set_task(self, task):
         self.task = task
         
@@ -86,5 +88,9 @@ class Layer_norm:
         else:  # decoding
             print('self attention decode =======')
             self.prefill = False
+            
+        h = self.compute.layer_norm(h, w_ln.data, b_ln.data, donate)
+        hidden.val = h   
         
-        hidden.val = h    
+        print('hidden.val.shape  ', hidden.val.shape)
+        print('hidden.val  ', hidden.val) 

@@ -149,7 +149,7 @@ class OptLM_TP:
         if not os.path.exists(check_path) and DUMMY_WEIGHT not in check_path:
             print(' download opt weights from hugging face---------')
             download_opt_weights(self.config.name, self.path)
-
+        print('layer '+ str(j)+' '+str(self.layers[j].name))
         self.layers[j].init_weight(self.weight_home[j], expanded_path)
         print('layer ' + str(j)+' init_weight done')
 

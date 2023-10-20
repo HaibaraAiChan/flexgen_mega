@@ -722,9 +722,11 @@ class TorchDevice:
         
         
         # hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
+        
         # print('hidden size ', hidden.size())
         hidden = inputs.data
         print('hidden shape ', inputs.data.shape)
+        print('hidden  ', inputs.data)
         # shape: (b, 1, h)
         # q = F.linear(hidden, w_q.data, bias=b_q.data) * scaling
         # k = F.linear(hidden, w_k.data, bias=b_k.data)
@@ -1058,6 +1060,13 @@ class TorchDevice:
 
         value = torch.cat([value_gpu, value_cpu.cuda().half()], dim=0)
         return value
+
+    def layer_norm(self, inputs, w_ln, b_ln, donate):
+        b, s, h = inputs.shape
+        out = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
+        if donate[0]: inputs.delete()
+        return TorchTensor.create_from_torch(out, self)
+
 
     def mlp(self, inputs, wi, bi, wo, bo, w_ln, b_ln, donate):
         # decompress weights
