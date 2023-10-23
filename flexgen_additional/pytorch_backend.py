@@ -116,6 +116,9 @@ class TorchTensor:
         print('cls data.device ',data.device )
         print('cls device ', device)
         return cls(data.shape, data.dtype, data, device, name=name)
+    def permute_dim(self, permute_d):
+        self.data =  self.data.permute(permute_d)
+        print('shape after permute ', self.data.shape)
     
     def tensor_parallel_part(self, data, device, world_size, world_rank):
         output_size = int(data.shape[-1])
@@ -1061,10 +1064,12 @@ class TorchDevice:
         value = torch.cat([value_gpu, value_cpu.cuda().half()], dim=0)
         return value
 
-    def layer_norm(self, inputs, w_ln, b_ln, donate):
+    def layer_norm_permute(self, inputs, w_ln, b_ln, donate):
         b, s, h = inputs.shape
         out = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
         if donate[0]: inputs.delete()
+        out = out.permute(1,0,2)
+        print('out after permute shape', out.shape)
         return TorchTensor.create_from_torch(out, self)
 
 
