@@ -113,8 +113,8 @@ class TorchTensor:
 
     @classmethod
     def create_from_torch(cls, data, device, name=None):
-        print('cls data.device ',data.device )
-        print('cls device ', device)
+        # print('cls data.device ',data.device )
+        # print('cls device ', device)
         return cls(data.shape, data.dtype, data, device, name=name)
     def permute_dim(self, permute_d):
         self.data =  self.data.permute(permute_d)
@@ -898,11 +898,11 @@ class TorchDevice:
         print("k_new_tensor_list[1].shape ", k_new_tensor_list[1].shape)
         
         
-        
         print("k_new.shape ", k_new.shape)
         v_new_tensor_list = [torch.zeros(v_new.shape, dtype=torch.float16).cuda(rank) for _ in range(world_size)]
         dist.all_gather(v_new_tensor_list, v_new.to_dense().cuda(rank).contiguous())
         v_new = torch.cat(v_new_tensor_list, dim=2).cuda(0)
+        # v_new = torch.cat(v_new_tensor_list, dim=2)
         print("k_new.shape torch.cat(k_new_tensor_list, dim=2) ", k_new.shape)
         print("v_new.shape torch.cat(v_new_tensor_list, dim=2)", v_new.shape)
         print('inputs.data shape ', inputs.data.shape)

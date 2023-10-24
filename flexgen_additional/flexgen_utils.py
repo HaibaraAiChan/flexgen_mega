@@ -396,9 +396,9 @@ def init_weight_list(weight_specs, policy, env):
         mid_percent = (sizes_cumsum[i] - sizes[i] / 2) / sizes_cumsum[-1]
         print('*********-------=-=-=--mid_percent ', mid_percent)
         home = get_choice(mid_percent * 100, dev_percents, dev_choices)
-        print('home device is ', home)
+        # print('home device is ', home)
         shape, dtype, filename = weight_specs[i]
-        print("weight_specs[i] ", weight_specs[i])
+        # print("weight_specs[i] ", weight_specs[i])
 
         if len(shape) < 2:
             pin_memory = True
@@ -412,7 +412,7 @@ def init_weight_list(weight_specs, policy, env):
 
             if DUMMY_WEIGHT not in filename:
                 weight.load_from_np_file(weight_specs[i][2])
-                print('weight shape ', weight.shape)
+                # print('weight shape ', weight.shape)
             else:
                 weight.load_from_np(np.ones(shape, dtype))
                 #weight.load_from_np(np.random.rand(*shape).astype(dtype))
@@ -444,11 +444,11 @@ def init_weight_list_tensor_parallel(weight_specs, policy, env):
     ret = []
     for i in range(len(weight_specs)):
         mid_percent = (sizes_cumsum[i] - sizes[i] / 2) / sizes_cumsum[-1]
-        print('*********-------=-=-=--mid_percent ', mid_percent)
+        # print('*********-------=-=-=--mid_percent ', mid_percent)
         home = get_choice(mid_percent * 100, dev_percents, dev_choices)
-        print('home device is ', home)
+        # print('home device is ', home)
         shape, dtype, filename = weight_specs[i]
-        print("weight_specs[i] ", weight_specs[i])
+        # print("weight_specs[i] ", weight_specs[i])
 
         if len(shape) < 2:
             pin_memory = True
@@ -465,10 +465,10 @@ def init_weight_list_tensor_parallel(weight_specs, policy, env):
                 world_rank = dist.get_rank()
                 print ('world_size ', world_size )
                 print ('world_rank ', world_rank )
-                print('weight_specs[i][2] ', weight_specs[i][2])
+                # print('weight_specs[i][2] ', weight_specs[i][2])
                 weight.load_from_np_file(weight_specs[i][2])
                 # weight.load_from_np_file_TP(weight_specs[i][2])
-                print('load_from_np_file,  weight shape ', weight.shape)
+                # print('load_from_np_file,  weight shape ', weight.shape)
                 # dist.init_process_group(backend='nccl')
                 # from pytorch_backend import tensor_parallel_part
                 # weight = tensor_parallel_part(weight.data, weight.device,world_size,world_rank )
@@ -482,7 +482,7 @@ def init_weight_list_tensor_parallel(weight_specs, policy, env):
                 # print('weight_list ', weight_list)
                 # print('weight_list[0].shape , ', weight_list[0].shape)
                 # weight = weight_list[world_rank]
-                print('weight.shape, ', weight.shape)
+                # print('weight.shape, ', weight.shape)
                 
                 
             else:

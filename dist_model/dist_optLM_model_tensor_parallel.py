@@ -142,9 +142,9 @@ class OptLM_TP:
     def init_weight(self, j):
         expanded_path = os.path.abspath(os.path.expanduser(
             os.path.join(self.path, f"{self.config.name}-np")))
-        print("expanded_path ", expanded_path)
+        # print("expanded_path ", expanded_path)
         check_path = os.path.join(expanded_path, "decoder.embed_positions.weight")
-        print('check_path ', check_path)
+        # print('check_path ', check_path)
         print('******* OPTLM model init weight')
         if not os.path.exists(check_path) and DUMMY_WEIGHT not in check_path:
             print(' download opt weights from hugging face---------')
@@ -298,13 +298,19 @@ class OptLM_TP:
         # Clear the weight_read_buf if it is the last gpu batch
         # Clear the cache_read_buf
         # Run layer computation
-        print('++++++++++++------+++++ compute_layer  layer  ', j)
+        print('++++++++++++------+++++ compute_layer  layer  '+ str(j )+ ' '+ str(self.layers[j].name) )
+        print()
+        print('------------------------layer name ',self.layers[j].name )
+        
+        if j == 0 or j ==1:
+            print('hidden[i][j][k].val.data.shape ', self.hidden[i][j][k].val.data.shape)
+            print('hidden[i][j][k].val.data ', self.hidden[i][j][k].val.data)
         
         self.layers[j].forward(self.hidden[i][j][k], self.cache_read_buf[j][k],
             self.weight_read_buf[j], self.attention_mask[k],
             self.cache_write_buf[j][k], i, k)
-        print('------------------------layer name ',self.layers[j].name )
-        print('hidden ', self.hidden[i][j][k].val)
+        # print('------------------------layer name ',self.layers[j].name )
+        # print('hidden ', self.hidden[i][j][k].val)
         # print('cache_read_buf ', self.cache_read_buf[j][k].val)
         # print('weight_read_buf ', self.weight_read_buf[j].val)
         # print('attention_mask ', self.attention_mask[k].val)
@@ -466,7 +472,7 @@ class OptLM_TP:
                     self.load_weight(i, j, k, overlap=False)
 
                 for k in range(self.num_gpu_batches):
-                    print('i, j, k = '+ str(i)+', '+ str(j)+', '+str(k))
+                    print('i (execute_gen_len), j(num_layers), k (num_gpu_batches)= '+ str(i)+', '+ str(j)+', '+str(k))
                     self.load_cache(i, j, k, overlap=False)
                     print("load_cache ")
                     self.load_hidden(i, j, k)

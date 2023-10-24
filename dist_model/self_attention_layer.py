@@ -47,7 +47,7 @@ class SelfAttention:
         
         split_sizes = [self.output // self.num_gpus for _ in range(self.num_gpus)]
         split_sizes[-1] += self.output  % self.num_gpus
-        print('split sizes ', split_sizes)
+        # print('split sizes ', split_sizes)
         self.split_idx=split_sizes
         
     def set_task(self, task):
