@@ -91,6 +91,8 @@ class TorchTensor:
 
     def __init__(self, shape, dtype, data, device, name=None):
         if isinstance(data, torch.Tensor):
+            print('isinstance data.device ',data.device )
+            print('isinstance device ', device)
             assert data.device == device.dev
 
         self.shape = shape
@@ -112,9 +114,11 @@ class TorchTensor:
         return f"t_{next(cls.name_count)}"
 
     @classmethod
-    def create_from_torch(cls, data, device, name=None):
-        # print('cls data.device ',data.device )
-        # print('cls device ', device)
+    def create_from_torch(cls, data, device, rank=0, name=None):
+        if rank == 1:
+            return cls(data.shape, data.dtype, data, TorchDevice('cuda:1'), name=name)
+        print('cls data.device ',data.device )
+        print('cls device ', device)
         return cls(data.shape, data.dtype, data, device, name=name)
     def permute_dim(self, permute_d):
         self.data =  self.data.permute(permute_d)
@@ -888,12 +892,14 @@ class TorchDevice:
         print("shape of b_out.data ", b_out.data.shape)
         value = output_parallel + b_out.data.cuda(rank)
         print("shape of value = output_parallel + b_out.data.cuda(rank))", value.shape)
+        print("value = output_parallel + b_out.data.cuda(rank))", value)
         print('value. device ', value.device)
         
 
         k_new_tensor_list = [torch.zeros(k_new.shape, dtype=torch.float16).cuda(rank) for _ in range(world_size)]
         dist.all_gather(k_new_tensor_list, k_new.to_dense().cuda(rank).contiguous())
-        k_new = torch.cat(k_new_tensor_list, dim=2).cuda(0)
+        # k_new = torch.cat(k_new_tensor_list, dim=2).cuda(0)
+        k_new = torch.cat(k_new_tensor_list, dim=2).cuda(rank)
         print("k_new_tensor_list ", k_new_tensor_list)
         print("k_new_tensor_list[0].shape ", k_new_tensor_list[0].shape)
         print("k_new_tensor_list[1].shape ", k_new_tensor_list[1].shape)
@@ -902,11 +908,13 @@ class TorchDevice:
         print("k_new.shape ", k_new.shape)
         v_new_tensor_list = [torch.zeros(v_new.shape, dtype=torch.float16).cuda(rank) for _ in range(world_size)]
         dist.all_gather(v_new_tensor_list, v_new.to_dense().cuda(rank).contiguous())
-        v_new = torch.cat(v_new_tensor_list, dim=2).cuda(0)
+        v_new = torch.cat(v_new_tensor_list, dim=2).cuda(rank)
         # v_new = torch.cat(v_new_tensor_list, dim=2)
         print("k_new.shape torch.cat(k_new_tensor_list, dim=2) ", k_new.shape)
         print("v_new.shape torch.cat(v_new_tensor_list, dim=2)", v_new.shape)
         print('inputs.data shape ', inputs.data.shape)
+        
+        print('after linear inputs.data ', inputs.data)
         
         value.add_(inputs.data.cuda(rank)) # Add & Norm
         print("shape of value after add_(inputs.data)", value.shape)
@@ -926,8 +934,8 @@ class TorchDevice:
             print('not compress cache device of K new ', k_new.device) 
             print('not compress cache  shape of v new ', v_new.shape) 
             print('not compress cache  device of v new ', v_new.device) 
-            k_new = TorchTensor.create_from_torch(k_new, self)
-            v_new = TorchTensor.create_from_torch(v_new, self)
+            k_new = TorchTensor.create_from_torch(k_new, self, rank)
+            v_new = TorchTensor.create_from_torch(v_new, self, rank)
             print()
         # see_memory_usage('---------================-------------------after mha_gen \n')
         # get_memory('---------================-------------------after mha_gen \n')
@@ -952,8 +960,9 @@ class TorchDevice:
         #     output = output + bias
         # return output
         
-        value = value.cuda(0)
-        return TorchTensor.create_from_torch(value, self), k_new, v_new
+        # value = value.cuda(0)
+        print('after mha_gen_TP value.data ', value.data)
+        return TorchTensor.create_from_torch(value, self,  rank), k_new, v_new
 
 
     def _attention_weights(self, q, k, mask, b, src_s, n_head):

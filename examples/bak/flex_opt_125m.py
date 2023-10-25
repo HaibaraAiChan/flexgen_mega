@@ -433,6 +433,7 @@ class SelfAttention:
 
         donate = [False] * 14
         h, donate[0] = hidden.val, True
+        print('self attention layer forward hidden.val.shape ', hidden.val.shape)
 
         if k == self.policy.num_gpu_batches - 1:
             # Clear the weight_read_buf if it is the last gpu batch
@@ -455,6 +456,8 @@ class SelfAttention:
             print('-----------------self attention decode =======')
             mask, donate[1] = attention_mask.val.smart_copy(self.attention_compute)
             (k_cache, donate[12]), (v_cache, donate[13]) = cache_read_buf.pop()
+            
+            print('self attention forward h.shape ', h.shape)
             h, new_k_cache, new_v_cache = self.compute.mha_gen(h, mask, w_q,
                 b_q, w_k, b_k, w_v, b_v, w_out, b_out, w_ln, b_ln, n_head,
                 k_cache, v_cache, donate, self.policy.attn_sparsity,
