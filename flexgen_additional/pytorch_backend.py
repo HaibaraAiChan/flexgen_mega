@@ -456,7 +456,7 @@ class TorchDevice:
         head_dim = h // n_head
         scaling = head_dim ** -0.5
         
-        print(' inputs.shape ',  inputs.shape)
+        print('prefill mha inputs.shape ',  inputs.shape)
         print('head_dim = h // n_head ', head_dim)
         
         # hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
@@ -515,6 +515,7 @@ class TorchDevice:
         else:
             k = TorchTensor.create_from_torch(k, self)
             v = TorchTensor.create_from_torch(v, self)
+            print('mha TP value.shape ', value.shape)
         # see_memory_usage('---------================-------------------after mha \n')
         # get_memory('---------================-------------------after mha \n')
         return TorchTensor.create_from_torch(value, self), k, v
@@ -1071,7 +1072,14 @@ class TorchDevice:
         out = out.permute(1,0,2)
         print('out after permute shape', out.shape)
         return TorchTensor.create_from_torch(out, self)
-
+    
+    def layer_norm(self, inputs, w_ln, b_ln, donate):
+        b, s, h = inputs.shape
+        out = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
+        if donate[0]: inputs.delete()
+        
+        print('layer norm out shape', out.shape)
+        return TorchTensor.create_from_torch(out, self)
 
     def mlp(self, inputs, wi, bi, wo, bo, w_ln, b_ln, donate):
         # decompress weights

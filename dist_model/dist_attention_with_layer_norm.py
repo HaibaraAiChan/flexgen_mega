@@ -91,7 +91,7 @@ class OptLM_TP:
         layers.append(InputEmbed(self.config, self.env, self.policy))
         for i in range(self.config.num_hidden_layers):
             if policy.sep_layer:
-                layers.append(Layer_norm(self.config, self.env, self.policy, i))
+                # layers.append(Layer_norm(self.config, self.env, self.policy, i))
                 layers.append(SelfAttention(self.config, self.env, self.policy, i))
                 layers.append(MLP(self.config, self.env, self.policy, i))
             else:
@@ -470,9 +470,7 @@ class OptLM_TP:
             for j in range(self.num_layers):
                 for k in range(self.num_gpu_batches):
                     self.load_weight(i, j, k, overlap=False)
-                    if j==0:
-                        print('i (execute_gen_len), j(num_layers), k (num_gpu_batches)= '+ str(i)+', '+ str(j)+', '+str(k))
-                    
+
                 for k in range(self.num_gpu_batches):
                     print('i (execute_gen_len), j(num_layers), k (num_gpu_batches)= '+ str(i)+', '+ str(j)+', '+str(k))
                     self.load_cache(i, j, k, overlap=False)

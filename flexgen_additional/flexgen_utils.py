@@ -412,7 +412,8 @@ def init_weight_list(weight_specs, policy, env):
 
             if DUMMY_WEIGHT not in filename:
                 weight.load_from_np_file(weight_specs[i][2])
-                # print('weight shape ', weight.shape)
+                print('filename ', filename)
+                print(' weight shape ', weight.shape)
             else:
                 weight.load_from_np(np.ones(shape, dtype))
                 #weight.load_from_np(np.random.rand(*shape).astype(dtype))
@@ -428,10 +429,10 @@ def init_weight_list(weight_specs, policy, env):
                     x.load_from_np(np.ones(x.shape, torch_dtype_to_np_dtype[x.dtype]))
 
         ret.append(weight)
-        # print('ret ', ret)
-        # print('ret[0] ', ret[0].shape)
-        # if len(ret)>1:
-        #     print('ret[1] ', ret[1].shape)
+        print('ret weight list: ', ret)
+        print('ret[0] weight  ', ret[0].shape)
+        if len(ret)>1:
+            print('ret[1] weight', ret[1].shape)
     return ret
 
 
@@ -482,7 +483,8 @@ def init_weight_list_tensor_parallel(weight_specs, policy, env):
                 # print('weight_list ', weight_list)
                 # print('weight_list[0].shape , ', weight_list[0].shape)
                 # weight = weight_list[world_rank]
-                # print('weight.shape, ', weight.shape)
+                print('file name ', filename)
+                print('weight.shape, ', weight.shape)
                 
                 
             else:

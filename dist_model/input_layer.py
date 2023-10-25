@@ -29,8 +29,9 @@ class InputEmbed:
             # w_pos
             ((s + 2, h), dtype, path + "decoder.embed_positions.weight"),
         ]
+        print('input layer weights ----')
         weights = init_weight_list(weight_specs, self.policy, self.env)
-
+        print('input layer weight loaded from numpy files')
         weight_home.store(weights)
 
     def load_weight(self, weight_home, weight_read_buf, k):
@@ -63,7 +64,11 @@ class InputEmbed:
             (w_token, donate[2]), (w_pos, donate[3]) = weight_read_buf.pop()
         else:
             (w_token, _), (w_pos, _) = weight_read_buf.val
-
+        print('input layer w_token.shape ' , w_token.shape)
+        print('input layer w_pos.shape ', w_pos.shape )
+        print('h.shape ', h.shape)
+        print('mask.shape ', mask.shape)
         h = self.compute.opt_input_embed(h, mask, w_token, w_pos, self.config.pad_token_id, donate)
         hidden.val = h
+        print('h.shape  after self.compute.opt_input_embed ', h.shape)
 

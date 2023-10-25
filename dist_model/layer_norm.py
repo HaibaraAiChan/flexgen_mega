@@ -90,14 +90,17 @@ class Layer_norm:
             self.prefill = False
         print('shape of w_ln.data ', w_ln.data.shape)
         print('shape of b_ln.data ', b_ln.data.shape)
-        print('h.data.shape', h.data.shape)
-        print('input h ', h.data[:,0:1,:])
-        h.permute_dim((1,0,2))
-        # h.data = h.data.permute(1,0,2)
-        print('h.shape after permute', h.data.shape)
-        h = self.compute.layer_norm_permute(h, w_ln.data, b_ln.data, donate)
+        print('layer norm input h.data.shape', h.data.shape)
+        print('layer norm  input h ', h.data)
+        # print('layer norm  input h ', h.data[:,0:1,:])
+        # h.permute_dim((1,0,2))
+        # print('h.shape after permute', h.data.shape)
+        # h = self.compute.layer_norm_permute(h, w_ln.data, b_ln.data, donate)
+        
+        h = self.compute.layer_norm(h, w_ln.data, b_ln.data, donate)
         hidden.val = h   
         
-        print('hidden.val.shape  ', hidden.val.shape)
-        print('hidden.val.data[:,0:1,:.]shape ', hidden.val.data[:,0:1,:].shape)
-        print( hidden.val.data[:,0:1,:]) 
+        print('layer norm  hidden.val.shape  ', hidden.val.shape)
+        print('layer norm  hidden.val.data ', hidden.val.data)
+        # print('layer norm  hidden.val.data[:,0:1,:.]shape ', hidden.val.data[:,0:1,:].shape)
+        # print( hidden.val.data[:,0:1,:]) 
