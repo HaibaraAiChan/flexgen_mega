@@ -234,7 +234,7 @@ class SelfAttention:
             print('self.compute ', self.compute) # cuda
             
             
-            h, new_k_cache, new_v_cache = self.compute.mha_TP(h, mask, w_q, b_q,
+            h, new_k_cache, new_v_cache = self.compute.mha_TP( h, mask, w_q, b_q,
                 w_k, b_k, w_v, b_v, w_out, b_out, n_head, donate,
                 self.policy.compress_cache, self.policy.comp_cache_config)
             

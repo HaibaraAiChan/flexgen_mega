@@ -1,5 +1,6 @@
 import os
 import sys
+import torch
 sys.path.insert(0,'/home/cc/my_flexgen/flexgen_additional')
 from flexgen_utils import init_weight_list
 from pytorch_backend import TorchTensor,TorchDevice, TorchDisk, TorchLink,TorchMixedDevice, DeviceType, general_copy, fix_recursive_import
@@ -97,10 +98,17 @@ class Layer_norm:
         # print('h.shape after permute', h.data.shape)
         # h = self.compute.layer_norm_permute(h, w_ln.data, b_ln.data, donate)
         
-        h = self.compute.layer_norm(h, w_ln.data, b_ln.data, donate)
-        hidden.val = h   
+        # h_new = self.compute.layer_norm(h, w_ln.data, b_ln.data, donate)
+        # print()
+        # print(h_new)
+        # print('layer norm  input hidden.val.shape  ', h.shape)
+        # print('layer norm  output hidden.val.shape  ', h_new.shape)
+        # hidden.val = h_new  
+        h_new = self.compute.layer_norm_add(h, w_ln.data, b_ln.data, donate)
         
-        print('layer norm  hidden.val.shape  ', hidden.val.shape)
-        print('layer norm  hidden.val.data ', hidden.val.data)
+        hidden.val = h_new   
+        print('layer norm new hidden.val.data.shape ', hidden.val.data.shape)
+        # 
         # print('layer norm  hidden.val.data[:,0:1,:.]shape ', hidden.val.data[:,0:1,:].shape)
         # print( hidden.val.data[:,0:1,:]) 
+        

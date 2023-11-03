@@ -471,9 +471,9 @@ class OptLM_TP:
                 for k in range(self.num_gpu_batches):
                     self.load_weight(i, j, k, overlap=False)
                     if j==0:
-                        print('i (execute_gen_len), j(num_layers), k (num_gpu_batches)= '+ str(i)+', '+ str(j)+', '+str(k))
+                        print('load weight: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= '+ str(i)+', '+ str(j)+', '+str(k))
                     
-                for k in range(self.num_gpu_batches):
+                for k in range(self.num_gpu_batches): # num_gpu_batches = 2
                     print('i (execute_gen_len), j(num_layers), k (num_gpu_batches)= '+ str(i)+', '+ str(j)+', '+str(k))
                     self.load_cache(i, j, k, overlap=False)
                     print("load_cache ")
