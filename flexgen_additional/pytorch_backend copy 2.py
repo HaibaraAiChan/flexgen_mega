@@ -949,7 +949,7 @@ class TorchDevice:
         print('mha_gen_TP: shape of value ', value.shape)
         print('mha_gen_TP: value ', value)
         print('mha_gen_TP: tgt_s ', tgt_s)
-        self.save_file(value.cpu().detach(), 'rank_'+str(rank)+'_value_before_transpose')
+        # self.save_file(value.cpu().detach(), 'rank_'+str(rank)+'_value_before_transpose')
         # self.save_file(value.cpu().detach(), 'value_before_transpose')
         
         # value = value.transpose(1, 2).view(b, tgt_s, h)
@@ -958,7 +958,7 @@ class TorchDevice:
         # value = value.transpose(1, 2).view(b//tensor_parallel_size, tgt_s, h) # [2,1,768]
         print('mha_gen_TP: value ', value)
         print('mha_gen_TP: value.shape ', value.shape)
-        self.save_file(value.cpu().detach(), 'rank_'+str(rank)+'_value_after_transpose')
+        # self.save_file(value.cpu().detach(), 'rank_'+str(rank)+'_value_after_transpose')
         # self.save_file(w_out_rank.cpu().detach(), 'rank_'+str(rank)+'_w_out_rank')
         # print('finish file save value')
 
