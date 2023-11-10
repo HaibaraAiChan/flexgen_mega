@@ -949,7 +949,7 @@ class TorchDevice:
         print('mha_gen_TP: shape of value ', value.shape)
         print('mha_gen_TP: value ', value)
         print('mha_gen_TP: tgt_s ', tgt_s)
-        self.save_file(value.cpu().detach(), 'rank_'+str(rank)+'_value_before_transpose')
+        # self.save_file(value.cpu().detach(), 'rank_'+str(rank)+'_value_before_transpose')
         # self.save_file(value.cpu().detach(), 'value_before_transpose')
         
         # value = value.transpose(1, 2).view(b, tgt_s, h)
@@ -958,7 +958,7 @@ class TorchDevice:
         # value = value.transpose(1, 2).view(b//tensor_parallel_size, tgt_s, h) # [2,1,768]
         print('mha_gen_TP: value ', value)
         print('mha_gen_TP: value.shape ', value.shape)
-        self.save_file(value.cpu().detach(), 'rank_'+str(rank)+'_value_after_transpose')
+        # self.save_file(value.cpu().detach(), 'rank_'+str(rank)+'_value_after_transpose')
         # self.save_file(w_out_rank.cpu().detach(), 'rank_'+str(rank)+'_w_out_rank')
         # print('finish file save value')
 
@@ -1076,17 +1076,26 @@ class TorchDevice:
         print('after torch.bmm(q, k): attn_weight.shape ', attn_weights.shape)
         print('after torch.bmm(q, k): attn_weights ', attn_weights)
         print('after torch.bmm(q, k): attn_weights device', attn_weights.device)
+        rank= torch.distributed.get_rank() 
+        # self.save_file(attn_weights.cpu().detach(), 'rank_'+str(rank)+'_attn_weights')
+        self.save_file(attn_weights.cpu().detach(), 'full_attn_weights')
+        
         # shape: (b, 1, 1, s)
         mask = mask.view(b, 1, 1, src_s)
         # shape: (b * n_head, 1, s)
         attn_weights = attn_weights.view(b, n_head, 1, src_s)
+        print('after view(b, n_head, 1, src_s): attn_weights ', attn_weights)
         print('after attn_weights.view(b, n_head, 1, src_s): attn_weight.shape ', attn_weights.shape)
+        
         attn_weights = torch.where(mask, attn_weights, -1e4)
+        print('after torch.where(mask, attn_weights, -1e4): attn_weight.shape ', attn_weights.shape)
+        
         attn_weights = attn_weights.view(b * n_head, 1, src_s)
         print('attn_weight.shape ', attn_weights.shape)
         print('attn_weights ', attn_weights)
+        
         attn_weights = F.softmax(attn_weights, dim=2)
-        print('_attention_weights shape ', attn_weights.shape)
+        print('attention_weights shape ', attn_weights.shape)
         print('after F.softmax(attn_weights, dim=2)_attention_weights  ', attn_weights)
         return attn_weights # row linear rank part
 
@@ -1102,6 +1111,16 @@ class TorchDevice:
         print('device of attn_weights ', attn_weights.device)
         print('attn_weights shape , ', attn_weights.shape)
         # shape o return value : (b, n_head, 1, head_dim)
+        print('_attention_value: v.shape ', v.shape)
+        print('_attention_value: v ', v)
+        ddma = torch.bmm(attn_weights, v)
+        print('torch.bmm(attn_weights, v).shape ' , ddma.shape)
+        print('torch.bmm(attn_weights, v) ' , ddma)
+        rank= torch.distributed.get_rank() 
+        # self.save_file(ddma.cpu().detach(), 'rank_'+str(rank)+'_value')
+        # self.save_file(ddma.cpu().detach(), 'full_value')
+        
+        print('finish file save')
         ddm = torch.bmm(attn_weights, v).view(b, n_head, tgt_s, head_dim)
         
         print('torch.bmm(attn_weights, v).view(b, n_head, tgt_s, head_dim).shape ' , ddm.shape)
