@@ -669,8 +669,25 @@ class TorchDevice:
     
     def save_file(self, tensor_3d, file_name):
         torch.save(tensor_3d, file_name+'.pt')
-        
-        
+    def split_index(self, b, n_head, tensor_parallel_size):
+        b = 4 # batch size
+        n_head = 12
+        step = n_head // tensor_parallel_size
+        indices=[]
+        for bb in range(0,b*2,2):
+            indices.append(list(range(bb*step,(bb+1)*step)))
+        original_tensor = torch.tensor(range(b*n_head))
+        # Define the indices for splitting
+        # indices = [list(range(6)), list(range(12, 18)), list(range(24, 30)), list(range(36, 42))]
+
+        # Convert indices to a flat tensor
+        flat_indices = torch.tensor([idx for sublist in indices for idx in sublist])
+        print('flat_indices ', flat_indices)
+        # Use index_select to extract the desired elements
+        sub_tensors = original_tensor[flat_indices]
+        print(sub_tensors)
+        return sub_tensors
+
     def mha_gen_TP(self, inputs, attention_mask, w_q, b_q, w_k, b_k, w_v, b_v,
                 w_out, b_out, n_head, k_cache, v_cache, donate,
                 attn_sparsity, compress_cache, comp_config):
@@ -891,10 +908,18 @@ class TorchDevice:
                     # self.save_file(v.cpu().detach(), 'rank_'+str(rank)+'_v')
                     # self.save_file(v.cpu().detach(), 'full_v_new')
 
-                    k = k[:,b*rank*num_heads_per_partition:b*(rank+1)*num_heads_per_partition,:]
+                    # k = k[:,b*rank*num_heads_per_partition:b*(rank+1)*num_heads_per_partition,:]
+                    if tensor_parallel_size == 1:
+                        indx = torch.tensor(range(b*n_head))
+                        print('index ', indx)
+                    else:
+                        indx = self.split_index(b, n_head, tensor_parallel_size)
+                        print('index ', indx)
+
+                    k = k[:,indx,:]
                     # K shape : [257,24,64]= (src_s, b*num_heads_per_partition, head_dim)
                     print('after rank : k_cache.data[:src_s] ', k.shape)
-                    v = v[:,b*rank*num_heads_per_partition:b*(rank+1)*num_heads_per_partition,:]
+                    v = v[:,indx,:]
                     print('v shape', v.shape)
                             
                     # self.save_file(k.cpu().detach(), 'rank_'+str(rank)+'_k')
@@ -909,7 +934,7 @@ class TorchDevice:
                 print('v shape', v.shape)
                 v[src_s - 1:src_s] = v_new
                 print('v shape', v.shape)
-                # self.save_file(k.cpu().detach(), 'rank_'+str(rank)+'_k')
+                self.save_file(k.cpu().detach(), 'rank_'+str(rank)+'_k')
                 # self.save_file(k.cpu().detach(), 'full_k')
                 # self.save_file(v.cpu().detach(), 'rank_'+str(rank)+'_v')
                 # self.save_file(v.cpu().detach(), 'full_v_new')
