@@ -6,7 +6,7 @@ device_count  2
 torch.cuda.set_device(device) cuda device 0
 dist init successfully
 rank #0: Finished initializing -* tensor parallel *- distributed environment
-rank #0: group,  <function get_tensor_model_parallel_group at 0x7f3be8f9e700>
+rank #0: group,  <function get_tensor_model_parallel_group at 0x7f2b64a01700>
 rank #0: Backend: nccl
 rank #0: World Size: 1
 rank #0: Rank: 0
@@ -23,12 +23,12 @@ rank #0: input layer weights ----
 rank #0: *********-------=-=-=--mid_percent  0.4804097702687206
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.embed_tokens.weight
 rank #0:  weight shape  torch.Size([50272, 768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd864ccd0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b540b0cd0>]
 rank #0: ret[0] weight   torch.Size([50272, 768])
 rank #0: *********-------=-=-=--mid_percent  0.9804097702687206
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.embed_positions.weight
 rank #0:  weight shape  torch.Size([2050, 768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd864ccd0>, <pytorch_backend.TorchTensor object at 0x7f3bd8cee070>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b540b0cd0>, <pytorch_backend.TorchTensor object at 0x7f2b54753040>]
 rank #0: ret[0] weight   torch.Size([50272, 768])
 rank #0: ret[1] weight torch.Size([2050, 768])
 rank #0: input layer weight loaded from numpy files
@@ -38,12 +38,12 @@ rank #0: layer 1 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.0.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8628dc0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54075dc0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.0.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8628dc0>, <pytorch_backend.TorchTensor object at 0x7f3bd8cee040>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54075dc0>, <pytorch_backend.TorchTensor object at 0x7f2b54753070>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 1 init_weight done
@@ -108,12 +108,12 @@ rank #0: layer 4 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.1.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ceee80>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54753e80>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.1.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ceee80>, <pytorch_backend.TorchTensor object at 0x7f3bd8cee0a0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54753e80>, <pytorch_backend.TorchTensor object at 0x7f2b547530a0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 4 init_weight done
@@ -178,12 +178,12 @@ rank #0: layer 7 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.2.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8628ee0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54075ee0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.2.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8628ee0>, <pytorch_backend.TorchTensor object at 0x7f3bd8cee970>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54075ee0>, <pytorch_backend.TorchTensor object at 0x7f2b54753970>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 7 init_weight done
@@ -248,12 +248,12 @@ rank #0: layer 10 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.3.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ceab50>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5474fb50>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.3.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ceab50>, <pytorch_backend.TorchTensor object at 0x7f3bd8ce89d0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5474fb50>, <pytorch_backend.TorchTensor object at 0x7f2b5474b9d0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 10 init_weight done
@@ -318,12 +318,12 @@ rank #0: layer 13 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.4.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce87f0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5474b7f0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.4.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce87f0>, <pytorch_backend.TorchTensor object at 0x7f3bd8ce5ca0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5474b7f0>, <pytorch_backend.TorchTensor object at 0x7f2b54748ca0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 13 init_weight done
@@ -388,12 +388,12 @@ rank #0: layer 16 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.5.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce86a0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5474b6a0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.5.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce86a0>, <pytorch_backend.TorchTensor object at 0x7f3bd8ce8640>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5474b6a0>, <pytorch_backend.TorchTensor object at 0x7f2b5474b640>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 16 init_weight done
@@ -458,12 +458,12 @@ rank #0: layer 19 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.6.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8cee460>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54753460>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.6.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8cee460>, <pytorch_backend.TorchTensor object at 0x7f3bd8ce8b20>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54753460>, <pytorch_backend.TorchTensor object at 0x7f2b5474bb20>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 19 init_weight done
@@ -528,12 +528,12 @@ rank #0: layer 22 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.7.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce5640>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54748640>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.7.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce5640>, <pytorch_backend.TorchTensor object at 0x7f3bd8ce1ee0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54748640>, <pytorch_backend.TorchTensor object at 0x7f2b54744ee0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 22 init_weight done
@@ -598,12 +598,12 @@ rank #0: layer 25 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.8.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce1730>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54744730>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.8.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce1730>, <pytorch_backend.TorchTensor object at 0x7f3bd8ce11c0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54744730>, <pytorch_backend.TorchTensor object at 0x7f2b547441c0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 25 init_weight done
@@ -668,12 +668,12 @@ rank #0: layer 28 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.9.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce5100>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54748100>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.9.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce5100>, <pytorch_backend.TorchTensor object at 0x7f3bd8cee2e0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b54748100>, <pytorch_backend.TorchTensor object at 0x7f2b547532e0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 28 init_weight done
@@ -738,12 +738,12 @@ rank #0: layer 31 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.10.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce81c0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5474b1c0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.10.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8ce81c0>, <pytorch_backend.TorchTensor object at 0x7f3bd8cdb3d0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5474b1c0>, <pytorch_backend.TorchTensor object at 0x7f2b5473e3d0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 31 init_weight done
@@ -808,12 +808,12 @@ rank #0: layer 34 layer_norm
 rank #0: *********-------=-=-=--mid_percent  0.25
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.11.self_attn_layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8cdbca0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5473eca0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.75
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layers.11.self_attn_layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8cdbca0>, <pytorch_backend.TorchTensor object at 0x7f3bd8cdb850>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5473eca0>, <pytorch_backend.TorchTensor object at 0x7f2b5473e850>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 34 init_weight done
@@ -878,23 +878,23 @@ rank #0: layer 37 OutputEmbed
 rank #0: *********-------=-=-=--mid_percent  9.945498667303179e-06
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layer_norm.weight
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8cdb2b0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5473e2b0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  2.9836496001909535e-05
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.layer_norm.bias
 rank #0:  weight shape  torch.Size([768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8cdb2b0>, <pytorch_backend.TorchTensor object at 0x7f3bd8ce80d0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5473e2b0>, <pytorch_backend.TorchTensor object at 0x7f2b5474b0d0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: *********-------=-=-=--mid_percent  0.5000198909973346
 rank #0: filename  /home/cc/opt_weights/opt-125m-np/decoder.embed_tokens.weight
 rank #0:  weight shape  torch.Size([50272, 768])
-rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f3bd8cdb2b0>, <pytorch_backend.TorchTensor object at 0x7f3bd8ce80d0>, <pytorch_backend.TorchTensor object at 0x7f3bd8ce8eb0>]
+rank #0: ret weight list:  [<pytorch_backend.TorchTensor object at 0x7f2b5473e2b0>, <pytorch_backend.TorchTensor object at 0x7f2b5474b0d0>, <pytorch_backend.TorchTensor object at 0x7f2b5474beb0>]
 rank #0: ret[0] weight   torch.Size([768])
 rank #0: ret[1] weight torch.Size([768])
 rank #0: layer 37 init_weight done
-rank #0: the time init all weights  4.5398852825164795
-rank #0: the model construction time  4.646797180175781
+rank #0: the time init all weights  4.5211567878723145
+rank #0: the model construction time  4.63291072845459
 rank #0:    model structure 
 rank #0: InputEmbed
 rank #0: layer_norm
@@ -1289,14 +1289,14 @@ rank #0: layer norm out tensor([[[ 0.2830, -1.1719, -0.0729,  ...,  0.8115,  0.1
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 2
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8613fa0>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd86130a0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54087fa0>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b540870a0>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 2
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8613fa0>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd86130a0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54087fa0>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b540870a0>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 2, 0
 rank #0: load_cache 
@@ -1965,14 +1965,14 @@ rank #0: layer norm out tensor([[[ 0.2888, -0.2646,  0.0269,  ...,  0.4663,  0.0
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 5
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628100>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd86131c0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075100>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b540871c0>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 5
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628100>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd86131c0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075100>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b540871c0>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 5, 0
 rank #0: load_cache 
@@ -2687,14 +2687,14 @@ rank #0: layer norm out tensor([[[ 0.3245,  0.0696,  0.1288,  ...,  0.7163, -0.5
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 8
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628220>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd86132e0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075220>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b540872e0>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 8
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628220>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd86132e0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075220>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b540872e0>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 8, 0
 rank #0: load_cache 
@@ -3363,14 +3363,14 @@ rank #0: layer norm out tensor([[[ 0.4873, -0.0241,  0.2886,  ...,  0.4531, -0.4
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 11
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628340>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613400>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075340>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087400>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 11
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628340>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613400>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075340>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087400>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 11, 0
 rank #0: load_cache 
@@ -4039,14 +4039,14 @@ rank #0: layer norm out tensor([[[ 0.6714, -0.4370,  0.2151,  ...,  0.3123, -0.3
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 14
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628460>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613520>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075460>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087520>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 14
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628460>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613520>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075460>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087520>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 14, 0
 rank #0: load_cache 
@@ -4807,14 +4807,14 @@ rank #0: layer norm out tensor([[[ 0.8267, -0.6553, -0.0565,  ...,  0.4822, -0.3
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 17
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628580>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613640>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075580>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087640>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 17
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628580>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613640>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075580>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087640>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 17, 0
 rank #0: load_cache 
@@ -5575,14 +5575,14 @@ rank #0: layer norm out tensor([[[ 0.4355, -0.3323,  0.1000,  ...,  0.1243, -0.2
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 20
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd86286a0>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613760>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b540756a0>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087760>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 20
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd86286a0>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613760>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b540756a0>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087760>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 20, 0
 rank #0: load_cache 
@@ -6251,14 +6251,14 @@ rank #0: layer norm out tensor([[[ 0.3989, -0.0138,  0.3267,  ..., -0.1022, -0.1
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 23
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd86287c0>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613880>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b540757c0>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087880>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 23
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd86287c0>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613880>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b540757c0>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087880>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 23, 0
 rank #0: load_cache 
@@ -6973,14 +6973,14 @@ rank #0: layer norm out tensor([[[ 0.4739, -0.3132,  0.5088,  ..., -0.2278, -0.3
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 26
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd86288e0>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd86139a0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b540758e0>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b540879a0>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 26
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd86288e0>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd86139a0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b540758e0>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b540879a0>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 26, 0
 rank #0: load_cache 
@@ -7649,14 +7649,14 @@ rank #0: layer norm out tensor([[[ 0.4119, -1.1670,  0.3538,  ..., -0.1096, -0.0
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 29
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628a00>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613ac0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075a00>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087ac0>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 29
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628a00>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613ac0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075a00>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087ac0>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 29, 0
 rank #0: load_cache 
@@ -8325,14 +8325,14 @@ rank #0: layer norm out tensor([[[ 0.5088, -0.8438,  0.3113,  ...,  0.0651, -0.2
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 32
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628b20>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613be0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075b20>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087be0>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 32
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628b20>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613be0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075b20>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087be0>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 32, 0
 rank #0: load_cache 
@@ -9047,14 +9047,14 @@ rank #0: layer norm out tensor([[[ 0.5361, -1.0469,  0.0034,  ..., -0.1748, -0.3
 rank #0: layer norm out_cat_input shape torch.Size([8, 256, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 256, 768])
 rank #0: load_weight layer 35
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628c40>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613d00>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075c40>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087d00>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 35
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8628c40>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd8613d00>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54075c40>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b54087d00>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 0, 35, 0
 rank #0: load_cache 
@@ -9648,14 +9648,14 @@ rank #0: layer norm out tensor([[[-0.0673, -0.2440, -0.0515,  ...,  0.4863,  0.2
 rank #0: layer norm out_cat_input shape torch.Size([8, 1, 768])
 rank #0: layer norm new hidden.val.data.shape  torch.Size([8, 1, 768])
 rank #0: load_weight layer 2
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8613fa0>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd86130a0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54087fa0>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b540870a0>
 rank #0: k  0
 rank #0: dst1  TorchDevice(name=cuda:0)
 rank #0: dst2  TorchDevice(name=cuda:0)
 rank #0: load_weight layer 2
-rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f3bd8613fa0>
-rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f3bd86130a0>
+rank #0: weight_home  <flexgen_utils.ValueHolder object at 0x7f2b54087fa0>
+rank #0: weight_read_buf  <flexgen_utils.ValueHolder object at 0x7f2b540870a0>
 rank #0: k  1
 rank #0: i (execute_gen_len), j(num_layers), k (num_gpu_batches)= 1, 2, 0
 rank #0: load_cache 
@@ -9939,8 +9939,8 @@ rank #0: k_new  torch.Size([1, 48, 64])
 rank #0: v_new  torch.Size([1, 48, 64])
 rank #0: src_s  257
 rank #0: k_cache.data[:src_s]  torch.Size([257, 48, 64])
-rank #0: after rank : k_cache.data[:src_s]  torch.Size([257, 48, 64])
 rank #0: v_cache.data[:src_s]  torch.Size([257, 48, 64])
+rank #0: after rank : k_cache.data[:src_s]  torch.Size([257, 48, 64])
 rank #0: v shape torch.Size([257, 48, 64])
 rank #0: k_new shape torch.Size([1, 48, 64])
 rank #0: k shape torch.Size([257, 48, 64])
@@ -10800,6 +10800,6 @@ a non-zero exit code.. Per user-direction, the job has been aborted.
 mpirun detected that one or more processes exited with non-zero status, thus causing
 the job to be terminated. The first process to do so was:
 
-  Process name: [[28923,1],0]
+  Process name: [[27798,1],0]
   Exit code:    1
 --------------------------------------------------------------------------
