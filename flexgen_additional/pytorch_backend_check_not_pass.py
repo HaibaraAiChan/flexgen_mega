@@ -704,39 +704,49 @@ class TorchDevice:
             w_k = w_k.device.decompress(w_k)
             w_v = w_v.device.decompress(w_v)
             w_out = w_out.device.decompress(w_out)
-        
+        print()
         bak_input = inputs
         hidden = inputs.data
-       
+        print('total input data shape', hidden.shape)
         length = len(hidden)
         split_tensors = torch.split(hidden, split_size_or_sections=[length//2,length//2], dim=0)
         input_layer_norm = split_tensors[1]
         hidden = split_tensors[0]
-       
+        print('input data of self-attention shape', hidden.shape)
+        print('hidden type', type(hidden))
+        
         
         b, tgt_s, h = hidden.shape
-       
+        print('b, tgt_s, h: '+ str(b )+" "+str(tgt_s)+' '+str(h))
         src_s = attention_mask.shape[1]
         head_dim = h // n_head
         
         
         scaling = head_dim ** -0.5
         world_size = torch.distributed.get_world_size()
-    
+        print("world_size_mha_gen_TP", world_size)
         tensor_parallel_size = world_size
         rank= torch.distributed.get_rank() 
         num_heads_per_partition  = n_head // world_size
         
         head_dim_per_partition = h // n_head//tensor_parallel_size
-      
+        # heads_per_split = n_head // tensor_parallel_size
+        print('tensor_parallel_size ', tensor_parallel_size)
+        print('w_q.data.shape ', w_q.data.shape)
+        # print('w_q.data ', w_q.data)
+        # tmp = w_q.data.view(h, tensor_parallel_size, h // tensor_parallel_size)
+        # print('w_q.data.view(h, tensor_parallel_size, h // tensor_parallel_size) ', tmp.shape)
+        # print('tmp ', tmp)
         q_weight_partitions = nn.ParameterList([
             nn.Parameter(w_q.data.view(tensor_parallel_size, h // tensor_parallel_size, h))
         ])
-
+        # print('len(q_weight_partitions[0] )', len(q_weight_partitions[0]))
+        # print('len(q_weight_partitions[0][0] )', len(q_weight_partitions[0][0]))
+        # print('len(q_weight_partitions[0][0][0] )', len(q_weight_partitions[0][0][0]))
         w_q_rank = q_weight_partitions[0]
         w_q_rank = w_q_rank[rank:(rank+1), : , :]
         w_q_rank = w_q_rank.squeeze(0)
-       
+        print('mha_gen_TP: the shape of w_q_rank ', w_q_rank.shape)
         
         
         k_weight_partitions = nn.ParameterList([
@@ -750,12 +760,17 @@ class TorchDevice:
         ])
         w_v_rank = v_weight_partitions[0][rank:(rank+1), :, :].squeeze(0)
         
-       
+        
+        # out_weight_partitions = nn.ParameterList([
+        #     nn.Parameter(w_out.data.view(tensor_parallel_size, h // tensor_parallel_size, h))
+        # ])
         out_weight_partitions = nn.ParameterList([
             nn.Parameter(w_out.data.view( h, tensor_parallel_size, h // tensor_parallel_size))
         ])
-        
+        print('out_weight_partitions[0].shape ', out_weight_partitions[0].shape )
         w_out_rank = out_weight_partitions[0][:, rank:(rank+1),  :].squeeze(1)
+        print('w_out_rank.shape ', w_out_rank.shape)
+        print('w_out_rank ', w_out_rank)
         
         
         q_bias_partitions = nn.ParameterList([
@@ -768,8 +783,9 @@ class TorchDevice:
         k_bias_partitions = nn.ParameterList([
             nn.Parameter(b_k.data.view( tensor_parallel_size, h // tensor_parallel_size))
         ])
-       
+        # b_k_rank = k_bias_partitions[rank]
         b_k_rank = k_bias_partitions[0][rank:(rank+1), :].squeeze(0)
+        
         
         
         v_bias_partitions = nn.ParameterList([
@@ -778,16 +794,45 @@ class TorchDevice:
         b_v_rank = v_bias_partitions[0][rank:(rank+1), :].squeeze(0)
         
         
+        
+        # out_bias_partitions = nn.ParameterList([
+        #     nn.Parameter(b_out.data.view( tensor_parallel_size, h // tensor_parallel_size))
+        # ])
+        # b_out_rank = out_bias_partitions[0][rank:(rank+1), :].squeeze(0)
+        
+        
+        # hidden = F.layer_norm(inputs.data, (h,), weight=w_ln.data, bias=b_ln.data)
+        
+        # print('hidden size ', hidden.size())
+        # hidden = inputs.data
+        # print('hidden shape ', inputs.data.shape)
+        # print('hidden  ', inputs.data)
+        
+        
+        
         # shape: (b, 1, h)
         # q = F.linear(hidden, w_q.data, bias=b_q.data) * scaling
         # k = F.linear(hidden, w_k.data, bias=b_k.data)
-        # v = F.linear(hidden, w_v.data, bias=b_v.data)   
+        # v = F.linear(hidden, w_v.data, bias=b_v.data)
+        print('mha_gen_TP: w_q_rank shape ', w_q_rank.shape)
+        print('mha_gen_TP: b_q_rank shape ', b_q_rank.shape)
+        # F.linear(hidden, w_q_rank, bias=b_q_rank)
+        # output = hidden.matmul(w_q_rank.t()) + b_q_rank
+        # w_q_rank = reduce_from_tensor_model_parallel_region(output_parallel) # ?
         
         q = (F.linear(hidden, w_q_rank, bias=b_q_rank) * scaling).cuda(rank)
         k = F.linear(hidden, w_k_rank, bias=b_k_rank).cuda(rank)
         v = F.linear(hidden, w_v_rank, bias=b_v_rank).cuda(rank)
-        
-        
+        print('mha_gen_TP: q shape after F.linear ', q.shape)
+        print('mha_gen_TP: q  after F.linear ', q)
+        print('mha_gen_TP: k shape after F.linear ', k.shape)
+        print('mha_gen_TP: v shape after F.linear ', v.shape)
+        # self.save_file(q.cpu().detach(), 'rank_'+str(rank)+'_q')
+        # # self.save_file(q.cpu().detach(), 'full_q')
+        # self.save_file(k.cpu().detach(), 'rank_'+str(rank)+'_k')
+        # # self.save_file(k.cpu().detach(), 'full_k')
+        # self.save_file(v.cpu().detach(), 'rank_'+str(rank)+'_v')
+        # self.save_file(v.cpu().detach(), 'full_v')
         # shape: (b, 1, n_head, head_dim)
         # q = q.view(b, tgt_s, n_head, head_dim_per_partition).cuda(rank)
         # k = k.view(b, tgt_s, n_head, head_dim_per_partition).cuda(rank)
@@ -795,29 +840,49 @@ class TorchDevice:
         q = q.view(b, tgt_s, num_heads_per_partition, head_dim).cuda(rank)
         k = k.view(b, tgt_s, num_heads_per_partition, head_dim).cuda(rank)
         v = v.view(b, tgt_s, num_heads_per_partition, head_dim).cuda(rank)
-     
+        print('mha_gen_TP: q.shape ', q.shape)
+        print('mha_gen_TP: k.shape ', k.shape)
+        print('mha_gen_TP: v.shape ', v.shape)
+        print("mha_gen_TP: q ", q)
+        print("mha_gen_TP: k ", k)
+        print("mha_gen_TP: v ", v)
+        print("mha_gen_TP: device of q ", q.device)
+        print("mha_gen_TP: device of k ", k.device)
+        print("mha_gen_TP: device of v ", v.device)
 
         import copy
         rank_device = copy.deepcopy(k.device )
         # # shape: (b * n_head, 1, head_dim)
         # q = q.permute(0, 2, 1, 3).reshape(b * n_head, tgt_s, head_dim_per_partition).cuda(rank)
+        # print('mha_gen_TP: k_new before permute', k)
         # # shape: (1, b * n_head, head_dim)
         # k_new = k.permute(1, 0, 2, 3).reshape(tgt_s, b * n_head, head_dim_per_partition).cuda(rank)
         # # shape: (1, b * n_head, head_dim)
         # v_new = v.permute(1, 0, 2, 3).reshape(tgt_s, b * n_head, head_dim_per_partition).cuda(rank)
         
-      
+        print('mha_gen_TP: k_new before permute', k)
         # shape: (b * n_head, 1, head_dim)
         q = q.permute(0, 2, 1, 3).reshape(b * num_heads_per_partition, tgt_s, head_dim).cuda(rank)
         # shape: (1, b * n_head, head_dim)
         # k_new = k.permute(1, 0, 2, 3).reshape(tgt_s, b * num_heads_per_partition, head_dim).cuda(rank)
         k_new = k.permute(1, 0, 2, 3).cuda(rank)
-
+        self.save_file(k_new.cpu().detach(), 'rank_'+str(rank)+'_k')
+        # self.save_file(k_new.cpu().detach(), 'full_k_new')
         k_new = k_new.reshape(tgt_s, b * num_heads_per_partition, head_dim).cuda(rank)
         # shape: (1, b * n_head, head_dim)
         v_new = v.permute(1, 0, 2, 3).reshape(tgt_s, b * num_heads_per_partition, head_dim).cuda(rank)
-
-       
+        # self.save_file(k_new.cpu().detach(), 'rank_'+str(rank)+'_k')
+        # self.save_file(k_new.cpu().detach(), 'full_k_new')
+        # self.save_file(v.cpu().detach(), 'rank_'+str(rank)+'_v')
+        # self.save_file(v.cpu().detach(), 'full_v_new')
+        print("mha_gen_TP: device of q  new ", q.device)
+        print("mha_gen_TP: device of k  new", k.device)
+        print('mha_gen_TP: shape of k new ', k_new.shape)
+        print('mha_gen_TP: k_new ', k_new)
+        print("mha_gen_TP: device of v  new", v.device)
+        print("mha_gen_TP: shape of v  new", v_new.shape)
+        print("mha_gen_TP: value of v  new", v_new)
+        print("mha_gen_TP: device of k_cache ", k_cache.device)
         if isinstance(k_cache, TorchTensor):
             if attn_sparsity >= 1.0:  # Dense attention
                 print('enter DENSE attention------')
@@ -828,9 +893,21 @@ class TorchDevice:
                 else:
                     # shape: (s, b * n_head, head_dim)
                     print('we do not compress cache')
+                    print('q ', q.shape)
+                    print('k_new ', k_new.shape)
+                    print('v_new ', v_new.shape)
+                    print('src_s ', src_s)
                     k = k_cache.data[:src_s]
+                    print('k_cache.data[:src_s] ', k.shape) 
                     # original shape : [257,48,64]= (src_s, b*n_head, head_dim)
                     v = v_cache.data[:src_s]
+                    print('v_cache.data[:src_s] ', v.shape)
+                    # self.save_file(k.cpu().detach(), 'rank_'+str(rank)+'_k')
+                    # self.save_file(k.cpu().detach(), 'full_k_new')
+                    # self.save_file(v.cpu().detach(), 'rank_'+str(rank)+'_v')
+                    # self.save_file(v.cpu().detach(), 'full_v_new')
+
+                    # k = k[:,b*rank*num_heads_per_partition:b*(rank+1)*num_heads_per_partition,:]
                     if tensor_parallel_size == 1:
                         indx = torch.tensor(range(b*n_head))
                         print('index ', indx)
@@ -840,13 +917,26 @@ class TorchDevice:
 
                     k = k[:,indx,:]
                     # K shape : [257,24,64]= (src_s, b*num_heads_per_partition, head_dim)
+                    print('after rank : k_cache.data[:src_s] ', k.shape)
                     v = v[:,indx,:]
-                   
-               
+                    print('v shape', v.shape)
+                            
+                    # self.save_file(k.cpu().detach(), 'rank_'+str(rank)+'_k')
+                    # self.save_file(k.cpu().detach(), 'full_k')
+                    # self.save_file(v.cpu().detach(), 'rank_'+str(rank)+'_v')
+                    # self.save_file(v.cpu().detach(), 'full_v')
+                print('k_new shape', k_new.shape)
+                print('k shape', k.shape)
                 k[src_s - 1:src_s] = k_new
+                print('k shape', k.shape)
+                print('v_new shape', v_new.shape)
+                print('v shape', v.shape)
                 v[src_s - 1:src_s] = v_new
-             
-               
+                print('v shape', v.shape)
+                self.save_file(k.cpu().detach(), 'rank_'+str(rank)+'_k')
+                # self.save_file(k.cpu().detach(), 'full_k')
+                # self.save_file(v.cpu().detach(), 'rank_'+str(rank)+'_v')
+                # self.save_file(v.cpu().detach(), 'full_v_new')
                 # # shape: (b * n_head, head_dim, s)
                 # k = k.permute(1, 2, 0).reshape(b * n_head, head_dim_per_partition, src_s)
                 # # shape: (b * n_head, s, head_dim)
@@ -857,7 +947,17 @@ class TorchDevice:
                 # shape: (b * num_heads_per_partition, s, head_dim)
                 v = v.permute(1, 0, 2).reshape(b * num_heads_per_partition, src_s, head_dim)
                 
-             
+                print("mha_gen_TP: k shape ", k.shape)
+                print("mha_gen_TP: v shape ", v.shape)
+                print("mha_gen_TP: device of k cuda ? ", k.device)
+                print("mha_gen_TP: device of v cuda ? ", v.device)
+                # # self.save_file(q.cpu().detach(), 'rank_'+str(rank)+'_q')
+                # self.save_file(q.cpu().detach(), 'full_q')
+                # # self.save_file(k.cpu().detach(), 'rank_'+str(rank)+'_k')
+                # self.save_file(k.cpu().detach(), 'full_k')
+                # # self.save_file(v.cpu().detach(), 'rank_'+str(rank)+'_v')
+                # self.save_file(v.cpu().detach(), 'full_v')
+                
                 if k.is_cuda:
                     print('mha_gen_TP: k.is_cuda ', k.is_cuda)
                     value = self._attention_value(q, k, v, attention_mask.data,
@@ -868,13 +968,15 @@ class TorchDevice:
                     k, v = k.float(), v.float()
                     # value = self._attention_value(q, k, v, attention_mask.data,
                     #     b, src_s, tgt_s, n_head, head_dim).cuda().half()
-                    value = self._attention_value(q, k, v, attention_mask.data,
-                        b, src_s, tgt_s, n_head, head_dim_per_partition).to(rank_device).half()
+                    # value = self._attention_value(q, k, v, attention_mask.data,
+                    #     b, src_s, tgt_s, n_head, head_dim_per_partition).to(rank_device).half()
                     
 
                     value = self._attention_value(q, k, v, attention_mask.data,
                         b, src_s, tgt_s, num_heads_per_partition, head_dim).to(rank_device).half()
-                    
+                    print('mha_gen_TP: shape of value after self._attention_value( )' , value.shape)
+                    print('mha_gen_TP: shape of q after self._attention_value( )' , q.shape)
+                    print('mha_gen_TP: shape of k after self._attention_value( )' , k.shape)
             else:  # Sparse attention
                 print('enter sparse attention------')
                 # shape: (s, b * n_head, head_dim)
@@ -900,33 +1002,82 @@ class TorchDevice:
                 n_head, head_dim_per_partition)
         # if q,k,v are on cpu
         # shape: (b, 1, h)
+        print('mha_gen_TP: shape of value ', value.shape)
+        print('mha_gen_TP: value ', value)
+        print('mha_gen_TP: tgt_s ', tgt_s)
+        # self.save_file(value.cpu().detach(), 'rank_'+str(rank)+'_value_before_transpose')
+        # self.save_file(value.cpu().detach(), 'value_before_transpose')
+        
         # value = value.transpose(1, 2).view(b, tgt_s, h)
 
         value = value.transpose(1, 2).view(b, tgt_s, h // tensor_parallel_size) # [4,1,384]
         # value = value.transpose(1, 2).view(b//tensor_parallel_size, tgt_s, h) # [2,1,768]
-       
-      
+        print('mha_gen_TP: value ', value)
+        print('mha_gen_TP: value.shape ', value.shape)
+        # self.save_file(value.cpu().detach(), 'rank_'+str(rank)+'_value_after_transpose')
+        # self.save_file(w_out_rank.cpu().detach(), 'rank_'+str(rank)+'_w_out_rank')
+        # print('finish file save value')
+
+        print('mha_gen_TP: value[0].shape ', value[0].shape)
+        print('mha_gen_TP: value[0] ', value[0])
+        print('mha_gen_TP: w_out_rank.shape ', w_out_rank.shape)
+        print('mha_gen_TP: w_out_rank ', w_out_rank)
+        print('mha_gen_TP: w_out_rank[0] ', w_out_rank[0])
+        print('mha_gen_TP: w_out_rank.t() ', w_out_rank.t())
+        print('mha_gen_TP: w_out_rank.t().shape ', w_out_rank.t().shape)
+        # value = value.to(torch.float32)  # Convert 'value' to float32
+        # w_out_rank = w_out_rank.to(torch.float32)  # Convert 'w_out_rank' to float32
+        print('mha_gen_TP: value.device ', value.device)
+        print('mha_gen_TP: w_out_rank.t().device ', w_out_rank.t().device)
+        # output_parallel = torch.matmul(value, w_out_rank.t().cuda(rank)).cuda(rank)
+        # print('mha_gen_TP: type of output_parallel ', output_parallel.type())
+        # self.save_file(value.cpu().detach(), 'value')
+        # self.save_file(w_out_rank.cpu().detach(), 'w_out_rank')
+        # self.save_file(value.cpu().detach(), 'rank_'+str(rank)+'_value')
+        # self.save_file(w_out_rank.cpu().detach(), 'rank_'+str(rank)+'_w_out_rank')
+        # print('finish file save')
+        # return
         output_parallel = F.linear(value, w_out_rank.cuda(rank), bias=None).cuda(rank)
+        print('mha_gen_TP: current rank ', rank)
+        print('mha_gen_TP: shape of output_parallel ', output_parallel.shape )
+        print('mha_gen_TP: before all recude output_parallel [0][0][:8] ',output_parallel[0][0][:8])
         
         torch.distributed.all_reduce(output_parallel, group=get_tensor_model_parallel_group())
-     
+
+        print('after reduce: output_parallel ', output_parallel)
+        print('after reduce:device of output_parallel ', output_parallel.device)
+        print("after reduce:shape of output_parallel ", output_parallel.shape)
+        print("after reduce:shape of b_out.data ", b_out.data.shape)
         value = output_parallel + b_out.data.cuda(rank)
+        print("shape of value = output_parallel + b_out.data.cuda(rank))", value.shape)
+        print("value = output_parallel + b_out.data.cuda(rank))", value)
+        print('value. device ', value.device)
+        
 
         k_new_tensor_list = [torch.zeros(k_new.shape, dtype=torch.float16).cuda(rank) for _ in range(world_size)]
         dist.all_gather(k_new_tensor_list, k_new.to_dense().cuda(rank).contiguous())
         # k_new = torch.cat(k_new_tensor_list, dim=2).cuda(0)
         k_new = torch.cat(k_new_tensor_list, dim=2).cuda(rank)
-     
+        print("k_new_tensor_list ", k_new_tensor_list)
+        print("k_new_tensor_list[0].shape ", k_new_tensor_list[0].shape)
+        # print("k_new_tensor_list[1].shape ", k_new_tensor_list[1].shape)
+        
+        
+        print("k_new.shape ", k_new.shape)
         v_new_tensor_list = [torch.zeros(v_new.shape, dtype=torch.float16).cuda(rank) for _ in range(world_size)]
         dist.all_gather(v_new_tensor_list, v_new.to_dense().cuda(rank).contiguous())
         v_new = torch.cat(v_new_tensor_list, dim=2).cuda(rank)
         # v_new = torch.cat(v_new_tensor_list, dim=2)
-       
+        print("k_new.shape torch.cat(k_new_tensor_list, dim=2) ", k_new.shape)
+        print("v_new.shape torch.cat(v_new_tensor_list, dim=2)", v_new.shape)
+        print('inputs.data shape ', inputs.data.shape)
         
-       
+        print('after linear inputs.data ', inputs.data)
         value.add_(input_layer_norm.cuda(rank))# Add & Norm
         # value.add_(inputs.data.cuda(rank)) # Add & Norm
-      
+        print('value.add_(input_layer_norm.cuda(rank)) ', value)
+        print("shape of value after add_(inputs.data)", value.shape)
+        print("device of value after add_(inputs.data)", value.device)
         if donate[0]: bak_input.delete()
         if donate[1]: attention_mask.delete()
 
@@ -938,12 +1089,39 @@ class TorchDevice:
             k_new = self.compressed_device.compress(k_new, comp_config)
             v_new = self.compressed_device.compress(v_new, comp_config)
         else:
-            
+            print('not compress cache shape of K new ', k_new.shape) 
+            print('not compress cache device of K new ', k_new.device) 
+            print('not compress cache  shape of v new ', v_new.shape) 
+            print('not compress cache  device of v new ', v_new.device) 
             k_new = TorchTensor.create_from_torch(k_new, self, rank)
             v_new = TorchTensor.create_from_torch(v_new, self, rank)
+            print()
+        # see_memory_usage('---------================-------------------after mha_gen \n')
+        # get_memory('---------================-------------------after mha_gen \n')
+        # ****************************************************
+        # if sequence_parallel:
+        #     world_size = get_tensor_model_parallel_world_size()
+        #     dim_size = list(input.size())
+        #     dim_size[0] = dim_size[0] * world_size
 
-       
-       
+        #     all_gather_buffer = \
+        #         get_global_memory_buffer().get_tensor(dim_size, input.dtype, "mpu")
+        #     torch.distributed._all_gather_base(
+        #         all_gather_buffer,
+        #         input,
+        #         group=get_tensor_model_parallel_group())
+        #     total_input = all_gather_buffer
+        # else:
+        #     total_input = input
+
+        # output = torch.matmul(total_input, weight.t())
+        # if bias is not None:
+        #     output = output + bias
+        # return output
+        
+        # value = value.cuda(0)
+        print('after mha_gen_TP value.data ', value.data)
+        return
         return TorchTensor.create_from_torch(value, self,  rank), k_new, v_new
 
 
