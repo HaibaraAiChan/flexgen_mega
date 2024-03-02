@@ -596,7 +596,8 @@ class TorchDevice:
             w_out = w_out.device.decompress(w_out)
         print()
         b, tgt_s, h = inputs.shape
-        print('b, tgt_s, h: '+ str(b )+" "+str(tgt_s)+' '+str(h))
+        print('batch, tgt_sequence, hidden: '+ str(b )+" "+str(tgt_s)+' '+str(h))
+        print('number of head ', n_head)
         src_s = attention_mask.shape[1]
         head_dim = h // n_head
         
@@ -832,7 +833,7 @@ class TorchDevice:
         print("tensor_list ", tensor_list)
         print("tensor_list[0].shape ", tensor_list[0].shape)
         # result = torch.cat(value, dim=1)
-        value = 
+        # value = 
         print('inputs.data shape ', inputs.data.shape)
         value.add_(inputs.data) # Add & Norm
         print("shape of value after add_(inputs.data)", value.shape)
