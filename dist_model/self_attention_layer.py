@@ -256,7 +256,7 @@ class SelfAttention:
             
             (k_cache, donate[12]), (v_cache, donate[13]) = cache_read_buf.pop()
             print('self.policy.comp_cache_config ', self.policy.comp_cache_config)
-            
+            print('decode input h.data ', h.data)
             # h, new_k_cache, new_v_cache = self.compute.mha_gen(h, mask, w_q,
             #     b_q, w_k, b_k, w_v, b_v, w_out, b_out, w_ln, b_ln, n_head,
             #     k_cache, v_cache, donate, self.policy.attn_sparsity,

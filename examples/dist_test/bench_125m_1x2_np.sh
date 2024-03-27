@@ -3,7 +3,7 @@
 MY_IPADDR=$(hostname -i)
 MY_IPADDR=127.0.0.1
 all_hosts=$MY_IPADDR
-N_GPUS=2
+N_GPUS=1
 N_CORES_PER_GPU=6
 
 # PYTHON_EXEC=python
@@ -28,4 +28,4 @@ mpirun \
     --cut-gen-len 5 \
     --path _DUMMY_ \
     --cpu \
-  > res_sh.log
+  > res_sh_${N_GPUS}_gpu.log
